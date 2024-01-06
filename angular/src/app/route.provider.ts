@@ -15,6 +15,19 @@ function configureRoutes(routesService: RoutesService) {
         order: 1,
         layout: eLayoutType.application,
       },
+      {
+        path: '/back-tester',
+        name: '::Menu:BackTester',
+        iconClass: 'fas fa-screwdriver-wrench',
+        order: 2,
+        layout: eLayoutType.application,
+      },
+      {
+        path: '/exchanges',
+        name: '::Menu:BackTester:Exchanges',
+        parentName: '::Menu:BackTester',
+        layout: eLayoutType.application,
+      },
     ]);
   };
 }

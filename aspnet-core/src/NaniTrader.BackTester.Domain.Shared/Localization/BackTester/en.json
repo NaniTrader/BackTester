@@ -2,7 +2,10 @@
   "culture": "en",
   "texts": {
     "Menu:Home": "Home",
+    "Menu:BackTester": "BackTester",
+    "Menu:BackTester:Exchanges": "Exchanges",
     "Welcome": "Welcome",
-    "LongWelcomeMessage": "Welcome to the application. This is a startup project based on the ABP framework. For more information, visit abp.io."
+    "LongWelcomeMessage": "Welcome to the application. This is a startup project based on the ABP framework. For more information, visit abp.io.",
+    "BackTester:00001": "There is already an exchange with the same name: {name}"
   }
 }
