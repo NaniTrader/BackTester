@@ -9,15 +9,23 @@
     <GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>
   </PropertyGroup>
 
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+		<TreatWarningsAsErrors>True</TreatWarningsAsErrors>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+		<TreatWarningsAsErrors>True</TreatWarningsAsErrors>
+	</PropertyGroup>
+
   <ItemGroup>
-    <PackageReference Include="Volo.Abp.Identity.Domain.Shared" Version="8.0.0" />
-    <PackageReference Include="Volo.Abp.BackgroundJobs.Domain.Shared" Version="8.0.0" />
-    <PackageReference Include="Volo.Abp.AuditLogging.Domain.Shared" Version="8.0.0" />
-    <PackageReference Include="Volo.Abp.TenantManagement.Domain.Shared" Version="8.0.0" />
-    <PackageReference Include="Volo.Abp.FeatureManagement.Domain.Shared" Version="8.0.0" />
-    <PackageReference Include="Volo.Abp.PermissionManagement.Domain.Shared" Version="8.0.0" />
-    <PackageReference Include="Volo.Abp.SettingManagement.Domain.Shared" Version="8.0.0" />
-    <PackageReference Include="Volo.Abp.OpenIddict.Domain.Shared" Version="8.0.0" />
+    <PackageReference Include="Volo.Abp.Identity.Domain.Shared" Version="8.0.1" />
+    <PackageReference Include="Volo.Abp.BackgroundJobs.Domain.Shared" Version="8.0.1" />
+    <PackageReference Include="Volo.Abp.AuditLogging.Domain.Shared" Version="8.0.1" />
+    <PackageReference Include="Volo.Abp.TenantManagement.Domain.Shared" Version="8.0.1" />
+    <PackageReference Include="Volo.Abp.FeatureManagement.Domain.Shared" Version="8.0.1" />
+    <PackageReference Include="Volo.Abp.PermissionManagement.Domain.Shared" Version="8.0.1" />
+    <PackageReference Include="Volo.Abp.SettingManagement.Domain.Shared" Version="8.0.1" />
+    <PackageReference Include="Volo.Abp.OpenIddict.Domain.Shared" Version="8.0.1" />
   </ItemGroup>
 
   <ItemGroup>

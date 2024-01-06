@@ -11,7 +11,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\src\NaniTrader.BackTester.EntityFrameworkCore\NaniTrader.BackTester.EntityFrameworkCore.csproj" />
     <ProjectReference Include="..\NaniTrader.BackTester.Application.Tests\NaniTrader.BackTester.Application.Tests.csproj" />
-    <PackageReference Include="Volo.Abp.EntityFrameworkCore.Sqlite" Version="8.0.0" />
+    <PackageReference Include="Volo.Abp.EntityFrameworkCore.Sqlite" Version="8.0.1" />
   </ItemGroup>
 
   <ItemGroup>

@@ -2,7 +2,9 @@
 
 public static class BackTesterConsts
 {
-    public const string DbTablePrefix = "App";
+    public const string DbTablePrefix = "Nani";
 
-    public const string DbSchema = null;
+    public const string DbSchema = "dbo";
+
+    public const string DbSchemaExch = "Exch";
 }
