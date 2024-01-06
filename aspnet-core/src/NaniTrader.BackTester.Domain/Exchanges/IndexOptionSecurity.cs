@@ -19,11 +19,7 @@ namespace NaniTrader.BackTester.Exchanges
         public string Name { get; private set; }
         public string Description { get; private set; }
 
-        internal IndexOptionSecurity(
-            long id,
-            string name,
-            string description)
-        : base(id)
+        internal IndexOptionSecurity(string name, string description)
         {
             SetName(name);
             SetDescription(description);

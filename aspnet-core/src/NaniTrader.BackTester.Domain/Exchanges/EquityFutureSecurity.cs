@@ -14,18 +14,14 @@ namespace NaniTrader.BackTester.Exchanges
     public class EquityFutureSecurity : Entity<long>
     {
         // here for ef core
-        #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor.
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor.
         private EquityFutureSecurity() { }
-        #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor.
+#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor.
 
         public string Name { get; private set; }
         public string Description { get; private set; }
 
-        internal EquityFutureSecurity(
-            long id,
-            string name,
-            string description)
-        : base(id)
+        internal EquityFutureSecurity(string name, string description)
         {
             SetName(name);
             SetDescription(description);

@@ -14,9 +14,10 @@ namespace NaniTrader.BackTester.Exchanges
 {
     public class Exchange : FullAuditedAggregateRoot<int>
     {
-#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor.
+        // here for ef core
+        #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor.
         private Exchange() { }
-#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor.
+        #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor.
 
         public string Name { get; private set; }
         public string Description { get; private set; }
@@ -28,11 +29,7 @@ namespace NaniTrader.BackTester.Exchanges
         public ICollection<IndexFutureSecurity> IndexFutureSecurities { get; private set; }
         public ICollection<IndexOptionSecurity> IndexOptionSecurities { get; private set; }
 
-        internal Exchange(
-            int id,
-            string name,
-            string description)
-        : base(id)
+        internal Exchange(string name, string description)
         {
             SetName(name);
             SetDescription(description);

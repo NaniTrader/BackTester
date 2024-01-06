@@ -3,4 +3,5 @@
 public static class BackTesterDomainErrorCodes
 {
     /* You can add your business exception error codes here, as constants */
+    public const string ExchangeAlreadyExists = "BackTester:00001";
 }
