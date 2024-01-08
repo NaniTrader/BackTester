@@ -18,13 +18,16 @@ namespace NaniTrader.BackTester.Exchanges
         private EquityFutureSecurity() { }
 #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor.
 
+        public Exchange? Exchange { get; private set; }
+        public int ExchangeId { get; private set; }
         public string Name { get; private set; }
         public string Description { get; private set; }
 
-        internal EquityFutureSecurity(string name, string description)
+        internal EquityFutureSecurity(string name, string description, int exchangeId)
         {
             SetName(name);
             SetDescription(description);
+            ExchangeId = exchangeId;
         }
 
         [MemberNotNull(nameof(Name))]

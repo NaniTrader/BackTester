@@ -12,17 +12,20 @@ namespace NaniTrader.BackTester.Exchanges
     public class IndexFutureSecurity : Entity<long>
     {
         // here for ef core
-        #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor.
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor.
         private IndexFutureSecurity() { }
-        #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor.
+#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor.
 
+        public Exchange? Exchange { get; private set; }
+        public int ExchangeId { get; private set; }
         public string Name { get; private set; }
         public string Description { get; private set; }
 
-        internal IndexFutureSecurity(string name, string description)
+        internal IndexFutureSecurity(string name, string description, int exchangeId)
         {
             SetName(name);
             SetDescription(description);
+            ExchangeId = exchangeId;
         }
 
         [MemberNotNull(nameof(Name))]

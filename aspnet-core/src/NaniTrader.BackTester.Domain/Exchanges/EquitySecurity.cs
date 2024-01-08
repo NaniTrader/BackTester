@@ -12,17 +12,24 @@ namespace NaniTrader.BackTester.Exchanges
     public class EquitySecurity : Entity<long>
     {
         // here for ef core
-        #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor.
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor.
         private EquitySecurity() { }
-        #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor.
+#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor.
 
+        public Exchange? Exchange { get; private set; }
+        public int ExchangeId { get; private set; }
         public string Name { get; private set; }
         public string Description { get; private set; }
+        public string ISIN { get; private set; }
+        public string TickerSymbol { get; private set; }
 
-        internal EquitySecurity(string name, string description)
+        internal EquitySecurity(string name, string description, int exchangeId, string isin, string tickerSymbol)
         {
             SetName(name);
             SetDescription(description);
+            ExchangeId = exchangeId;
+            SetISIN(isin);
+            SetTickerSymbol(tickerSymbol);
         }
 
         [MemberNotNull(nameof(Name))]
@@ -36,6 +43,20 @@ namespace NaniTrader.BackTester.Exchanges
         public EquitySecurity SetDescription(string description)
         {
             Description = Check.NotNullOrWhiteSpace(description, nameof(description), ExchangeConsts.MaxDescriptionLength, ExchangeConsts.MinDescriptionLength);
+            return this;
+        }
+
+        [MemberNotNull(nameof(ISIN))]
+        public EquitySecurity SetISIN(string isin)
+        {
+            ISIN = Check.NotNullOrWhiteSpace(isin, nameof(isin), ExchangeConsts.MaxISINLength, ExchangeConsts.MinISINLength);
+            return this;
+        }
+
+        [MemberNotNull(nameof(TickerSymbol))]
+        public EquitySecurity SetTickerSymbol(string tickerSymbol)
+        {
+            TickerSymbol = Check.NotNullOrWhiteSpace(tickerSymbol, nameof(tickerSymbol), ExchangeConsts.MaxTickerSymbolLength, ExchangeConsts.MinTickerSymbolLength);
             return this;
         }
     }
