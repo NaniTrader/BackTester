@@ -6,10 +6,11 @@ using System.Text;
 using System.Threading.Tasks;
 using Volo.Abp;
 using Volo.Abp.Domain.Entities;
+using Volo.Abp.Domain.Entities.Auditing;
 
 namespace NaniTrader.BackTester.Exchanges
 {
-    public class IndexOptionSecurity : Entity<long>
+    public class IndexOptionSecurity : FullAuditedEntity<long>
     {
         // here for ef core
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor.
@@ -18,14 +19,17 @@ namespace NaniTrader.BackTester.Exchanges
 
         public Exchange? Exchange { get; private set; }
         public int ExchangeId { get; private set; }
+        public IndexSecurity? IndexSecurity { get; private set; }
+        public long IndexSecurityId { get; private set; }
         public string Name { get; private set; }
         public string Description { get; private set; }
 
-        internal IndexOptionSecurity(string name, string description, int exchangeId)
+        internal IndexOptionSecurity(string name, string description, int exchangeId, long indexSecurityId)
         {
             SetName(name);
             SetDescription(description);
             ExchangeId = exchangeId;
+            IndexSecurityId = indexSecurityId;
         }
 
         [MemberNotNull(nameof(Name))]

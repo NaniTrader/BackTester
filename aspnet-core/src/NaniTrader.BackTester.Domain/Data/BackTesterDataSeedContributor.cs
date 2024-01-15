@@ -1,4 +1,5 @@
 ﻿using NaniTrader.BackTester.Countries;
+using NaniTrader.BackTester.Exchanges;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,16 +15,36 @@ namespace NaniTrader.BackTester.Data
     public class BackTesterDataSeedContributor : IDataSeedContributor, ITransientDependency
     {
         private readonly IRepository<Country, int> _countryRepository;
+        private readonly IExchangeRepository _exchangeRepository;
 
         public BackTesterDataSeedContributor(
-            IRepository<Country, int> countryRepository)
+            IRepository<Country, int> countryRepository,
+            IExchangeRepository exchangeRepository)
         {
             _countryRepository = countryRepository;
+            _exchangeRepository = exchangeRepository;
         }
 
         public async Task SeedAsync(DataSeedContext context)
         {
             await CreateCountriesAsync();
+            await CreateExchangesAsync();
+        }
+
+        private async Task CreateExchangesAsync()
+        {
+            if (await _exchangeRepository.GetCountAsync() > 0)
+            {
+                return;
+            }
+
+            var exchanges = new List<Exchange>
+            {
+                new Exchange( "NSE", "National Stock Exchange"),
+                new Exchange( "BSE", "Bombay Stock Exchange")
+            };
+
+            await _exchangeRepository.InsertManyAsync(exchanges, autoSave: true);
         }
 
         private async Task CreateCountriesAsync()

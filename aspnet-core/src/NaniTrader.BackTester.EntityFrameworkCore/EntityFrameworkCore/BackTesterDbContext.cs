@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using NaniTrader.BackTester.Countries;
 using NaniTrader.BackTester.Exchanges;
 using Volo.Abp.AuditLogging.EntityFrameworkCore;
 using Volo.Abp.BackgroundJobs.EntityFrameworkCore;
@@ -34,6 +35,7 @@ public class BackTesterDbContext :
     public DbSet<IndexSecurity> IndexSecurities { get; set; }
     public DbSet<IndexFutureSecurity> IndexFutureSecurities { get; set; }
     public DbSet<IndexOptionSecurity> IndexOptionSecurities { get; set; }
+    public DbSet<Country> Countries { get; set; }
 
     #region Entities from the modules
 
@@ -155,6 +157,14 @@ public class BackTesterDbContext :
             b.Property(x => x.Id).ValueGeneratedOnAdd();
             b.Property(x => x.Name).IsRequired().HasMaxLength(ExchangeConsts.MaxNameLength);
             b.Property(x => x.Description).IsRequired().HasMaxLength(ExchangeConsts.MaxDescriptionLength);
+        });
+
+        builder.Entity<Country>(b =>
+        {
+            b.ToTable(BackTesterConsts.DbTablePrefix + nameof(Countries), BackTesterConsts.DbSchema);
+            b.ConfigureByConvention(); //auto configure for the base class props
+            b.Property(x => x.Id).ValueGeneratedOnAdd();
+            b.Property(x => x.Name).IsRequired().HasMaxLength(CountryConsts.MaxNameLength);
         });
     }
 }

@@ -15,9 +15,9 @@ namespace NaniTrader.BackTester.Exchanges
     public class Exchange : FullAuditedAggregateRoot<int>
     {
         // here for ef core
-        #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor.
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor.
         private Exchange() { }
-        #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor.
+#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor.
 
         public string Name { get; private set; }
         public string Description { get; private set; }
