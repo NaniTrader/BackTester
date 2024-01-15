@@ -1,5 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
-using NaniTrader.BackTester.Exchanges.Securities;
+using NaniTrader.BackTester.MarketDataProviders.Securities;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -11,13 +11,13 @@ using System.Threading.Tasks;
 using Volo.Abp;
 using Volo.Abp.Domain.Entities.Auditing;
 
-namespace NaniTrader.BackTester.Exchanges
+namespace NaniTrader.BackTester.MarketDataProviders
 {
-    public class Exchange : FullAuditedAggregateRoot<int>
+    public class MarketDataProvider : FullAuditedAggregateRoot<int>
     {
         // here for ef core
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor.
-        private Exchange() { }
+        private MarketDataProvider() { }
 #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor.
 
         public string Name { get; private set; }
@@ -30,7 +30,7 @@ namespace NaniTrader.BackTester.Exchanges
         public ICollection<IndexFutureSecurity> IndexFutureSecurities { get; private set; }
         public ICollection<IndexOptionSecurity> IndexOptionSecurities { get; private set; }
 
-        internal Exchange(string name, string description)
+        internal MarketDataProvider(string name, string description)
         {
             SetName(name);
             SetDescription(description);
@@ -44,16 +44,16 @@ namespace NaniTrader.BackTester.Exchanges
         }
 
         [MemberNotNull(nameof(Name))]
-        public Exchange SetName(string name)
+        public MarketDataProvider SetName(string name)
         {
-            Name = Check.NotNullOrWhiteSpace(name, nameof(name), ExchangeConsts.MaxNameLength, ExchangeConsts.MinNameLength);
+            Name = Check.NotNullOrWhiteSpace(name, nameof(name), MarketDataProviderConsts.MaxNameLength, MarketDataProviderConsts.MinNameLength);
             return this;
         }
 
         [MemberNotNull(nameof(Description))]
-        public Exchange SetDescription(string description)
+        public MarketDataProvider SetDescription(string description)
         {
-            Description = Check.NotNullOrWhiteSpace(description, nameof(description), ExchangeConsts.MaxDescriptionLength, ExchangeConsts.MinDescriptionLength);
+            Description = Check.NotNullOrWhiteSpace(description, nameof(description), MarketDataProviderConsts.MaxDescriptionLength, MarketDataProviderConsts.MinDescriptionLength);
             return this;
         }
     }

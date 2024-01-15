@@ -8,7 +8,7 @@ using Volo.Abp;
 using Volo.Abp.Domain.Entities;
 using Volo.Abp.Domain.Entities.Auditing;
 
-namespace NaniTrader.BackTester.Exchanges
+namespace NaniTrader.BackTester.MarketDataProviders.Securities
 {
     public class IndexFutureSecurity : FullAuditedEntity<long>
     {
@@ -17,32 +17,32 @@ namespace NaniTrader.BackTester.Exchanges
         private IndexFutureSecurity() { }
 #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor.
 
-        public Exchange? Exchange { get; private set; }
-        public int ExchangeId { get; private set; }
+        public MarketDataProvider? MarketDataProvider { get; private set; }
+        public int MarketDataProviderId { get; private set; }
         public IndexSecurity? IndexSecurity { get; private set; }
         public long IndexSecurityId { get; private set; }
         public string Name { get; private set; }
         public string Description { get; private set; }
 
-        internal IndexFutureSecurity(string name, string description, int exchangeId, long indexSecurityId)
+        internal IndexFutureSecurity(string name, string description, int marketDataProviderId, long indexSecurityId)
         {
             SetName(name);
             SetDescription(description);
-            ExchangeId = exchangeId;
+            MarketDataProviderId = marketDataProviderId;
             IndexSecurityId = indexSecurityId;
         }
 
         [MemberNotNull(nameof(Name))]
         public IndexFutureSecurity SetName(string name)
         {
-            Name = Check.NotNullOrWhiteSpace(name, nameof(name), ExchangeConsts.MaxNameLength, ExchangeConsts.MinNameLength);
+            Name = Check.NotNullOrWhiteSpace(name, nameof(name), MarketDataProviderConsts.MaxNameLength, MarketDataProviderConsts.MinNameLength);
             return this;
         }
 
         [MemberNotNull(nameof(Description))]
         public IndexFutureSecurity SetDescription(string description)
         {
-            Description = Check.NotNullOrWhiteSpace(description, nameof(description), ExchangeConsts.MaxDescriptionLength, ExchangeConsts.MinDescriptionLength);
+            Description = Check.NotNullOrWhiteSpace(description, nameof(description), MarketDataProviderConsts.MaxDescriptionLength, MarketDataProviderConsts.MinDescriptionLength);
             return this;
         }
     }

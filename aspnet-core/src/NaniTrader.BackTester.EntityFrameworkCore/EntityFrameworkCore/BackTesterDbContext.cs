@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using NaniTrader.BackTester.Countries;
-using NaniTrader.BackTester.Exchanges;
+using NaniTrader.BackTester.Exchanges.Securities;
+using NaniTrader.BackTester.MarketDataProviders.Securities;
 using Volo.Abp.AuditLogging.EntityFrameworkCore;
 using Volo.Abp.BackgroundJobs.EntityFrameworkCore;
 using Volo.Abp.Data;
@@ -28,13 +29,20 @@ public class BackTesterDbContext :
 {
     /* Add DbSet properties for your Aggregate Roots / Entities here. */
 
-    public DbSet<Exchange> Exchanges { get; set; }
-    public DbSet<EquitySecurity> EquitySecurities { get; set; }
-    public DbSet<EquityFutureSecurity> EquityFutureSecurities { get; set; }
-    public DbSet<EquityOptionSecurity> EquityOptionSecurities { get; set; }
-    public DbSet<IndexSecurity> IndexSecurities { get; set; }
-    public DbSet<IndexFutureSecurity> IndexFutureSecurities { get; set; }
-    public DbSet<IndexOptionSecurity> IndexOptionSecurities { get; set; }
+    public DbSet<Exchanges.Exchange> Exchanges { get; set; }
+    public DbSet<Exchanges.Securities.EquitySecurity> ExchangeEquitySecurities { get; set; }
+    public DbSet<Exchanges.Securities.EquityFutureSecurity> ExchangeEquityFutureSecurities { get; set; }
+    public DbSet<Exchanges.Securities.EquityOptionSecurity> ExchangeEquityOptionSecurities { get; set; }
+    public DbSet<Exchanges.Securities.IndexSecurity> ExchangeIndexSecurities { get; set; }
+    public DbSet<Exchanges.Securities.IndexFutureSecurity> ExchangeIndexFutureSecurities { get; set; }
+    public DbSet<Exchanges.Securities.IndexOptionSecurity> ExchangeIndexOptionSecurities { get; set; }
+    public DbSet<MarketDataProviders.MarketDataProvider> MarketDataProviders { get; set; }
+    public DbSet<MarketDataProviders.Securities.EquitySecurity> MarketDataProviderEquitySecurities { get; set; }
+    public DbSet<MarketDataProviders.Securities.EquityFutureSecurity> MarketDataProviderEquityFutureSecurities { get; set; }
+    public DbSet<MarketDataProviders.Securities.EquityOptionSecurity> MarketDataProviderEquityOptionSecurities { get; set; }
+    public DbSet<MarketDataProviders.Securities.IndexSecurity> MarketDataProviderIndexSecurities { get; set; }
+    public DbSet<MarketDataProviders.Securities.IndexFutureSecurity> MarketDataProviderIndexFutureSecurities { get; set; }
+    public DbSet<MarketDataProviders.Securities.IndexOptionSecurity> MarketDataProviderIndexOptionSecurities { get; set; }
     public DbSet<Country> Countries { get; set; }
 
     #region Entities from the modules
@@ -88,13 +96,13 @@ public class BackTesterDbContext :
 
         /* Configure your own tables/entities inside here */
 
-        builder.Entity<Exchange>(b =>
+        builder.Entity<Exchanges.Exchange>(b =>
         {
             b.ToTable(BackTesterConsts.DbTablePrefix + nameof(Exchanges), BackTesterConsts.DbSchemaExch);
             b.ConfigureByConvention(); //auto configure for the base class props
             b.Property(x => x.Id).ValueGeneratedOnAdd();
-            b.Property(x => x.Name).IsRequired().HasMaxLength(ExchangeConsts.MaxNameLength);
-            b.Property(x => x.Description).IsRequired().HasMaxLength(ExchangeConsts.MaxDescriptionLength);
+            b.Property(x => x.Name).IsRequired().HasMaxLength(BackTester.Exchanges.ExchangeConsts.MaxNameLength);
+            b.Property(x => x.Description).IsRequired().HasMaxLength(BackTester.Exchanges.ExchangeConsts.MaxDescriptionLength);
             b.HasMany(e => e.EquitySecurities).WithOne(e => e.Exchange).HasForeignKey(e => e.ExchangeId).IsRequired();
             b.HasMany(e => e.EquityFutureSecurities).WithOne(e => e.Exchange).HasForeignKey(e => e.ExchangeId).IsRequired();
             b.HasMany(e => e.EquityOptionSecurities).WithOne(e => e.Exchange).HasForeignKey(e => e.ExchangeId).IsRequired();
@@ -103,60 +111,60 @@ public class BackTesterDbContext :
             b.HasMany(e => e.IndexOptionSecurities).WithOne(e => e.Exchange).HasForeignKey(e => e.ExchangeId).IsRequired();
         });
 
-        builder.Entity<EquitySecurity>(b =>
+        builder.Entity<Exchanges.Securities.EquitySecurity>(b =>
         {
-            b.ToTable(BackTesterConsts.DbTablePrefix + nameof(EquitySecurities), BackTesterConsts.DbSchemaExch);
+            b.ToTable(BackTesterConsts.DbTablePrefix + nameof(ExchangeEquitySecurities), BackTesterConsts.DbSchemaExch);
             b.ConfigureByConvention(); //auto configure for the base class props
             b.Property(x => x.Id).ValueGeneratedOnAdd();
-            b.Property(x => x.Name).IsRequired().HasMaxLength(ExchangeConsts.MaxNameLength);
-            b.Property(x => x.Description).IsRequired().HasMaxLength(ExchangeConsts.MaxDescriptionLength);
-            b.Property(x => x.ISIN).IsRequired().HasMaxLength(ExchangeConsts.MaxISINLength);
-            b.Property(x => x.TickerSymbol).IsRequired().HasMaxLength(ExchangeConsts.MaxTickerSymbolLength);
+            b.Property(x => x.Name).IsRequired().HasMaxLength(BackTester.Exchanges.ExchangeConsts.MaxNameLength);
+            b.Property(x => x.Description).IsRequired().HasMaxLength(BackTester.Exchanges.ExchangeConsts.MaxDescriptionLength);
+            b.Property(x => x.ISIN).IsRequired().HasMaxLength(BackTester.Exchanges.ExchangeConsts.MaxISINLength);
+            b.Property(x => x.TickerSymbol).IsRequired().HasMaxLength(BackTester.Exchanges.ExchangeConsts.MaxTickerSymbolLength);
         });
 
-        builder.Entity<EquityFutureSecurity>(b =>
+        builder.Entity<Exchanges.Securities.EquityFutureSecurity>(b =>
         {
-            b.ToTable(BackTesterConsts.DbTablePrefix + nameof(EquityFutureSecurities), BackTesterConsts.DbSchemaExch);
+            b.ToTable(BackTesterConsts.DbTablePrefix + nameof(ExchangeEquityFutureSecurities), BackTesterConsts.DbSchemaExch);
             b.ConfigureByConvention(); //auto configure for the base class props
             b.Property(x => x.Id).ValueGeneratedOnAdd();
-            b.Property(x => x.Name).IsRequired().HasMaxLength(ExchangeConsts.MaxNameLength);
-            b.Property(x => x.Description).IsRequired().HasMaxLength(ExchangeConsts.MaxDescriptionLength);
+            b.Property(x => x.Name).IsRequired().HasMaxLength(BackTester.Exchanges.ExchangeConsts.MaxNameLength);
+            b.Property(x => x.Description).IsRequired().HasMaxLength(BackTester.Exchanges.ExchangeConsts.MaxDescriptionLength);
         });
 
-        builder.Entity<EquityOptionSecurity>(b =>
+        builder.Entity<Exchanges.Securities.EquityOptionSecurity>(b =>
         {
-            b.ToTable(BackTesterConsts.DbTablePrefix + nameof(EquityOptionSecurities), BackTesterConsts.DbSchemaExch);
+            b.ToTable(BackTesterConsts.DbTablePrefix + nameof(ExchangeEquityOptionSecurities), BackTesterConsts.DbSchemaExch);
             b.ConfigureByConvention(); //auto configure for the base class props
             b.Property(x => x.Id).ValueGeneratedOnAdd();
-            b.Property(x => x.Name).IsRequired().HasMaxLength(ExchangeConsts.MaxNameLength);
-            b.Property(x => x.Description).IsRequired().HasMaxLength(ExchangeConsts.MaxDescriptionLength);
+            b.Property(x => x.Name).IsRequired().HasMaxLength(BackTester.Exchanges.ExchangeConsts.MaxNameLength);
+            b.Property(x => x.Description).IsRequired().HasMaxLength(BackTester.Exchanges.ExchangeConsts.MaxDescriptionLength);
         });
 
-        builder.Entity<IndexSecurity>(b =>
+        builder.Entity<Exchanges.Securities.IndexSecurity>(b =>
         {
-            b.ToTable(BackTesterConsts.DbTablePrefix + nameof(IndexSecurities), BackTesterConsts.DbSchemaExch);
+            b.ToTable(BackTesterConsts.DbTablePrefix + nameof(ExchangeIndexSecurities), BackTesterConsts.DbSchemaExch);
             b.ConfigureByConvention(); //auto configure for the base class props
             b.Property(x => x.Id).ValueGeneratedOnAdd();
-            b.Property(x => x.Name).IsRequired().HasMaxLength(ExchangeConsts.MaxNameLength);
-            b.Property(x => x.Description).IsRequired().HasMaxLength(ExchangeConsts.MaxDescriptionLength);
+            b.Property(x => x.Name).IsRequired().HasMaxLength(BackTester.Exchanges.ExchangeConsts.MaxNameLength);
+            b.Property(x => x.Description).IsRequired().HasMaxLength(BackTester.Exchanges.ExchangeConsts.MaxDescriptionLength);
         });
 
-        builder.Entity<IndexFutureSecurity>(b =>
+        builder.Entity<Exchanges.Securities.IndexFutureSecurity>(b =>
         {
-            b.ToTable(BackTesterConsts.DbTablePrefix + nameof(IndexFutureSecurities), BackTesterConsts.DbSchemaExch);
+            b.ToTable(BackTesterConsts.DbTablePrefix + nameof(ExchangeIndexFutureSecurities), BackTesterConsts.DbSchemaExch);
             b.ConfigureByConvention(); //auto configure for the base class props
             b.Property(x => x.Id).ValueGeneratedOnAdd();
-            b.Property(x => x.Name).IsRequired().HasMaxLength(ExchangeConsts.MaxNameLength);
-            b.Property(x => x.Description).IsRequired().HasMaxLength(ExchangeConsts.MaxDescriptionLength);
+            b.Property(x => x.Name).IsRequired().HasMaxLength(BackTester.Exchanges.ExchangeConsts.MaxNameLength);
+            b.Property(x => x.Description).IsRequired().HasMaxLength(BackTester.Exchanges.ExchangeConsts.MaxDescriptionLength);
         });
 
-        builder.Entity<IndexOptionSecurity>(b =>
+        builder.Entity<Exchanges.Securities.IndexOptionSecurity>(b =>
         {
-            b.ToTable(BackTesterConsts.DbTablePrefix + nameof(IndexOptionSecurities), BackTesterConsts.DbSchemaExch);
+            b.ToTable(BackTesterConsts.DbTablePrefix + nameof(ExchangeIndexOptionSecurities), BackTesterConsts.DbSchemaExch);
             b.ConfigureByConvention(); //auto configure for the base class props
             b.Property(x => x.Id).ValueGeneratedOnAdd();
-            b.Property(x => x.Name).IsRequired().HasMaxLength(ExchangeConsts.MaxNameLength);
-            b.Property(x => x.Description).IsRequired().HasMaxLength(ExchangeConsts.MaxDescriptionLength);
+            b.Property(x => x.Name).IsRequired().HasMaxLength(BackTester.Exchanges.ExchangeConsts.MaxNameLength);
+            b.Property(x => x.Description).IsRequired().HasMaxLength(BackTester.Exchanges.ExchangeConsts.MaxDescriptionLength);
         });
 
         builder.Entity<Country>(b =>
@@ -165,6 +173,77 @@ public class BackTesterDbContext :
             b.ConfigureByConvention(); //auto configure for the base class props
             b.Property(x => x.Id).ValueGeneratedOnAdd();
             b.Property(x => x.Name).IsRequired().HasMaxLength(CountryConsts.MaxNameLength);
+        });
+
+        builder.Entity<MarketDataProviders.MarketDataProvider>(b =>
+        {
+            b.ToTable(BackTesterConsts.DbTablePrefix + nameof(MarketDataProviders), BackTesterConsts.DbSchemaMDP);
+            b.ConfigureByConvention(); //auto configure for the base class props
+            b.Property(x => x.Id).ValueGeneratedOnAdd();
+            b.Property(x => x.Name).IsRequired().HasMaxLength(BackTester.MarketDataProviders.MarketDataProviderConsts.MaxNameLength);
+            b.Property(x => x.Description).IsRequired().HasMaxLength(BackTester.MarketDataProviders.MarketDataProviderConsts.MaxDescriptionLength);
+            b.HasMany(e => e.EquitySecurities).WithOne(e => e.MarketDataProvider).HasForeignKey(e => e.MarketDataProviderId).IsRequired();
+            b.HasMany(e => e.EquityFutureSecurities).WithOne(e => e.MarketDataProvider).HasForeignKey(e => e.MarketDataProviderId).IsRequired();
+            b.HasMany(e => e.EquityOptionSecurities).WithOne(e => e.MarketDataProvider).HasForeignKey(e => e.MarketDataProviderId).IsRequired();
+            b.HasMany(e => e.IndexSecurities).WithOne(e => e.MarketDataProvider).HasForeignKey(e => e.MarketDataProviderId).IsRequired();
+            b.HasMany(e => e.IndexFutureSecurities).WithOne(e => e.MarketDataProvider).HasForeignKey(e => e.MarketDataProviderId).IsRequired();
+            b.HasMany(e => e.IndexOptionSecurities).WithOne(e => e.MarketDataProvider).HasForeignKey(e => e.MarketDataProviderId).IsRequired();
+        });
+
+        builder.Entity<MarketDataProviders.Securities.EquitySecurity>(b =>
+        {
+            b.ToTable(BackTesterConsts.DbTablePrefix + nameof(MarketDataProviderEquitySecurities), BackTesterConsts.DbSchemaMDP);
+            b.ConfigureByConvention(); //auto configure for the base class props
+            b.Property(x => x.Id).ValueGeneratedOnAdd();
+            b.Property(x => x.Name).IsRequired().HasMaxLength(BackTester.MarketDataProviders.MarketDataProviderConsts.MaxNameLength);
+            b.Property(x => x.Description).IsRequired().HasMaxLength(BackTester.MarketDataProviders.MarketDataProviderConsts.MaxDescriptionLength);
+            b.Property(x => x.ISIN).IsRequired().HasMaxLength(BackTester.MarketDataProviders.MarketDataProviderConsts.MaxISINLength);
+            b.Property(x => x.TickerSymbol).IsRequired().HasMaxLength(BackTester.MarketDataProviders.MarketDataProviderConsts.MaxTickerSymbolLength);
+        });
+
+        builder.Entity<MarketDataProviders.Securities.EquityFutureSecurity>(b =>
+        {
+            b.ToTable(BackTesterConsts.DbTablePrefix + nameof(MarketDataProviderEquityFutureSecurities), BackTesterConsts.DbSchemaMDP);
+            b.ConfigureByConvention(); //auto configure for the base class props
+            b.Property(x => x.Id).ValueGeneratedOnAdd();
+            b.Property(x => x.Name).IsRequired().HasMaxLength(BackTester.MarketDataProviders.MarketDataProviderConsts.MaxNameLength);
+            b.Property(x => x.Description).IsRequired().HasMaxLength(BackTester.MarketDataProviders.MarketDataProviderConsts.MaxDescriptionLength);
+        });
+
+        builder.Entity<MarketDataProviders.Securities.EquityOptionSecurity>(b =>
+        {
+            b.ToTable(BackTesterConsts.DbTablePrefix + nameof(MarketDataProviderEquityOptionSecurities), BackTesterConsts.DbSchemaMDP);
+            b.ConfigureByConvention(); //auto configure for the base class props
+            b.Property(x => x.Id).ValueGeneratedOnAdd();
+            b.Property(x => x.Name).IsRequired().HasMaxLength(BackTester.MarketDataProviders.MarketDataProviderConsts.MaxNameLength);
+            b.Property(x => x.Description).IsRequired().HasMaxLength(BackTester.MarketDataProviders.MarketDataProviderConsts.MaxDescriptionLength);
+        });
+
+        builder.Entity<MarketDataProviders.Securities.IndexSecurity>(b =>
+        {
+            b.ToTable(BackTesterConsts.DbTablePrefix + nameof(MarketDataProviderIndexSecurities), BackTesterConsts.DbSchemaMDP);
+            b.ConfigureByConvention(); //auto configure for the base class props
+            b.Property(x => x.Id).ValueGeneratedOnAdd();
+            b.Property(x => x.Name).IsRequired().HasMaxLength(BackTester.MarketDataProviders.MarketDataProviderConsts.MaxNameLength);
+            b.Property(x => x.Description).IsRequired().HasMaxLength(BackTester.MarketDataProviders.MarketDataProviderConsts.MaxDescriptionLength);
+        });
+
+        builder.Entity<MarketDataProviders.Securities.IndexFutureSecurity>(b =>
+        {
+            b.ToTable(BackTesterConsts.DbTablePrefix + nameof(MarketDataProviderIndexFutureSecurities), BackTesterConsts.DbSchemaMDP);
+            b.ConfigureByConvention(); //auto configure for the base class props
+            b.Property(x => x.Id).ValueGeneratedOnAdd();
+            b.Property(x => x.Name).IsRequired().HasMaxLength(BackTester.MarketDataProviders.MarketDataProviderConsts.MaxNameLength);
+            b.Property(x => x.Description).IsRequired().HasMaxLength(BackTester.MarketDataProviders.MarketDataProviderConsts.MaxDescriptionLength);
+        });
+
+        builder.Entity<MarketDataProviders.Securities.IndexOptionSecurity>(b =>
+        {
+            b.ToTable(BackTesterConsts.DbTablePrefix + nameof(MarketDataProviderIndexOptionSecurities), BackTesterConsts.DbSchemaMDP);
+            b.ConfigureByConvention(); //auto configure for the base class props
+            b.Property(x => x.Id).ValueGeneratedOnAdd();
+            b.Property(x => x.Name).IsRequired().HasMaxLength(BackTester.MarketDataProviders.MarketDataProviderConsts.MaxNameLength);
+            b.Property(x => x.Description).IsRequired().HasMaxLength(BackTester.MarketDataProviders.MarketDataProviderConsts.MaxDescriptionLength);
         });
     }
 }
