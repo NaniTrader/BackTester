@@ -12,10 +12,12 @@ namespace NaniTrader.BackTester.MarketDataProviders
     public class MarketDataProviderManager : DomainService
     {
         private readonly IMarketDataProviderRepository _marketDataProviderRepository;
+        private readonly IGuidGenerator _guidGenerator;
 
-        public MarketDataProviderManager(IMarketDataProviderRepository MarketDataProviderRepository)
+        public MarketDataProviderManager(IMarketDataProviderRepository MarketDataProviderRepository, IGuidGenerator guidGenerator)
         {
             _marketDataProviderRepository = MarketDataProviderRepository;
+            _guidGenerator = guidGenerator;
         }
 
         public async Task<MarketDataProvider> CreateAsync(string name, string description)
@@ -28,7 +30,7 @@ namespace NaniTrader.BackTester.MarketDataProviders
                 throw new MarketDataProviderAlreadyExistsException(name);
             }
 
-            return new MarketDataProvider(name, description);
+            return new MarketDataProvider(_guidGenerator.Create(), name, description);
         }
     }
 }

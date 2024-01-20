@@ -12,7 +12,7 @@ using Volo.Abp.EntityFrameworkCore;
 namespace NaniTrader.BackTester.MarketDataProviders
 {
     public class EfCoreMarketDataProviderRepository
-    : EfCoreRepository<BackTesterDbContext, MarketDataProvider, int>,
+    : EfCoreRepository<BackTesterDbContext, MarketDataProvider, Guid>,
         IMarketDataProviderRepository
     {
         public EfCoreMarketDataProviderRepository(IDbContextProvider<BackTesterDbContext> dbContextProvider)

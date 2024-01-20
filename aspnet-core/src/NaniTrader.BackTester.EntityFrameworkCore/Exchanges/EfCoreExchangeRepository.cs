@@ -12,7 +12,7 @@ using Volo.Abp.EntityFrameworkCore;
 namespace NaniTrader.BackTester.Exchanges
 {
     public class EfCoreExchangeRepository
-    : EfCoreRepository<BackTesterDbContext, Exchange, int>,
+    : EfCoreRepository<BackTesterDbContext, Exchange, Guid>,
         IExchangeRepository
     {
         public EfCoreExchangeRepository(IDbContextProvider<BackTesterDbContext> dbContextProvider)

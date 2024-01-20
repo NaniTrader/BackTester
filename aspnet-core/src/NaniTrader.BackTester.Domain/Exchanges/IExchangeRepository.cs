@@ -7,10 +7,11 @@ using Volo.Abp.Domain.Repositories;
 
 namespace NaniTrader.BackTester.Exchanges
 {
-    public interface IExchangeRepository : IRepository<Exchange, int>
+    public interface IExchangeRepository : IRepository<Exchange, Guid>
     {
         Task<Exchange?> FindByNameAsync(string name);
 
+        //TODO Remove
         Task<List<Exchange>> GetListAsync(
             int skipCount,
             int maxResultCount,

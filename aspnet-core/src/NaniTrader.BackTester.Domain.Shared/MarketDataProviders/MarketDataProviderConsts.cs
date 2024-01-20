@@ -11,11 +11,5 @@ namespace NaniTrader.BackTester.MarketDataProviders
 
         public const int MinDescriptionLength = 1;
         public const int MaxDescriptionLength = 2000;
-
-        public const int MinISINLength = 1;
-        public const int MaxISINLength = 256;
-
-        public const int MinTickerSymbolLength = 1;
-        public const int MaxTickerSymbolLength = 256;
     }
 }

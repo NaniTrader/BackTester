@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <Import Project="..\..\common.props" />
 
@@ -38,7 +38,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Volo.Abp.Autofac" Version="8.0.1" />
+    <PackageReference Include="Volo.Abp.Autofac" Version="8.0.2" />
     <ProjectReference Include="..\NaniTrader.BackTester.Application.Contracts\NaniTrader.BackTester.Application.Contracts.csproj" />
     <ProjectReference Include="..\NaniTrader.BackTester.EntityFrameworkCore\NaniTrader.BackTester.EntityFrameworkCore.csproj" />
   </ItemGroup>

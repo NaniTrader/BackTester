@@ -10,27 +10,26 @@ using Volo.Abp.Domain.Entities.Auditing;
 
 namespace NaniTrader.BackTester.MarketDataProviders.Securities
 {
-    public class EquitySecurity : FullAuditedEntity<long>
+    public class EquitySecurity : FullAuditedAggregateRoot<Guid>
     {
         // here for ef core
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor.
         private EquitySecurity() { }
 #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor.
 
-        public MarketDataProvider? MarketDataProvider { get; private set; }
-        public int MarketDataProviderId { get; private set; }
+        public Guid ExchangeSecurityId { get; private set; }
+        public MarketDataProvider MarketDataProvider { get; private set; }
         public string Name { get; private set; }
         public string Description { get; private set; }
-        public string ISIN { get; private set; }
-        public string TickerSymbol { get; private set; }
+        public ICollection<EquityFutureSecurity>? Futures { get; private set; }
+        public ICollection<EquityOptionSecurity>? Options { get; private set; }
 
-        internal EquitySecurity(string name, string description, int marketDataProviderId, string isin, string tickerSymbol)
+        internal EquitySecurity(Guid id, string name, string description, MarketDataProvider marketDataProvider, Guid exchangeSecurityId) : base(id)
         {
             SetName(name);
             SetDescription(description);
-            MarketDataProviderId = marketDataProviderId;
-            SetISIN(isin);
-            SetTickerSymbol(tickerSymbol);
+            MarketDataProvider = marketDataProvider;
+            ExchangeSecurityId = exchangeSecurityId;
         }
 
         [MemberNotNull(nameof(Name))]
@@ -44,20 +43,6 @@ namespace NaniTrader.BackTester.MarketDataProviders.Securities
         public EquitySecurity SetDescription(string description)
         {
             Description = Check.NotNullOrWhiteSpace(description, nameof(description), MarketDataProviderConsts.MaxDescriptionLength, MarketDataProviderConsts.MinDescriptionLength);
-            return this;
-        }
-
-        [MemberNotNull(nameof(ISIN))]
-        public EquitySecurity SetISIN(string isin)
-        {
-            ISIN = Check.NotNullOrWhiteSpace(isin, nameof(isin), MarketDataProviderConsts.MaxISINLength, MarketDataProviderConsts.MinISINLength);
-            return this;
-        }
-
-        [MemberNotNull(nameof(TickerSymbol))]
-        public EquitySecurity SetTickerSymbol(string tickerSymbol)
-        {
-            TickerSymbol = Check.NotNullOrWhiteSpace(tickerSymbol, nameof(tickerSymbol), MarketDataProviderConsts.MaxTickerSymbolLength, MarketDataProviderConsts.MinTickerSymbolLength);
             return this;
         }
     }

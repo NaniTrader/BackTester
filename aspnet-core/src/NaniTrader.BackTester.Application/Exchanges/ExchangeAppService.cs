@@ -21,7 +21,7 @@ namespace NaniTrader.BackTester.Exchanges
             _exchangeManager = exchangeManager;
         }
 
-        public async Task<ExchangeDto> GetAsync(int id)
+        public async Task<ExchangeDto> GetAsync(Guid id)
         {
             var exchange = await _exchangeRepository.GetAsync(id);
             return ObjectMapper.Map<Exchange, ExchangeDto>(exchange);
@@ -64,7 +64,7 @@ namespace NaniTrader.BackTester.Exchanges
             return ObjectMapper.Map<Exchange, ExchangeDto>(exchange);
         }
 
-        public async Task DeleteAsync(int id)
+        public async Task DeleteAsync(Guid id)
         {
             await _exchangeRepository.DeleteAsync(id);
         }

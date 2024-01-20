@@ -13,7 +13,7 @@ using Volo.Abp.Domain.Entities.Auditing;
 
 namespace NaniTrader.BackTester.Exchanges
 {
-    public class Exchange : FullAuditedAggregateRoot<int>
+    public class Exchange : FullAuditedAggregateRoot<Guid>
     {
         // here for ef core
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor.
@@ -30,7 +30,7 @@ namespace NaniTrader.BackTester.Exchanges
         public ICollection<IndexFutureSecurity> IndexFutureSecurities { get; private set; }
         public ICollection<IndexOptionSecurity> IndexOptionSecurities { get; private set; }
 
-        internal Exchange(string name, string description)
+        internal Exchange(Guid id, string name, string description) : base (id)
         {
             SetName(name);
             SetDescription(description);

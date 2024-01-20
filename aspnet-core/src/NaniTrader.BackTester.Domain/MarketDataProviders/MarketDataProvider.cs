@@ -13,7 +13,7 @@ using Volo.Abp.Domain.Entities.Auditing;
 
 namespace NaniTrader.BackTester.MarketDataProviders
 {
-    public class MarketDataProvider : FullAuditedAggregateRoot<int>
+    public class MarketDataProvider : FullAuditedAggregateRoot<Guid>
     {
         // here for ef core
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor.
@@ -23,6 +23,7 @@ namespace NaniTrader.BackTester.MarketDataProviders
         public string Name { get; private set; }
         public string Description { get; private set; }
 
+        public ICollection<Guid> SubscribedExchanges { get; private set; }
         public ICollection<EquitySecurity> EquitySecurities { get; private set; }
         public ICollection<EquityFutureSecurity> EquityFutureSecurities { get; private set; }
         public ICollection<EquityOptionSecurity> EquityOptionSecurities { get; private set; }
@@ -30,11 +31,12 @@ namespace NaniTrader.BackTester.MarketDataProviders
         public ICollection<IndexFutureSecurity> IndexFutureSecurities { get; private set; }
         public ICollection<IndexOptionSecurity> IndexOptionSecurities { get; private set; }
 
-        internal MarketDataProvider(string name, string description)
+        internal MarketDataProvider(Guid id, string name, string description) : base(id)
         {
             SetName(name);
             SetDescription(description);
 
+            SubscribedExchanges = new Collection<Guid>();
             EquitySecurities = new Collection<EquitySecurity>();
             EquityFutureSecurities = new Collection<EquityFutureSecurity>();
             EquityOptionSecurities = new Collection<EquityOptionSecurity>();
@@ -54,6 +56,19 @@ namespace NaniTrader.BackTester.MarketDataProviders
         public MarketDataProvider SetDescription(string description)
         {
             Description = Check.NotNullOrWhiteSpace(description, nameof(description), MarketDataProviderConsts.MaxDescriptionLength, MarketDataProviderConsts.MinDescriptionLength);
+            return this;
+        }
+
+        internal MarketDataProvider AddExchange(Guid exchangeId)
+        {
+            if (SubscribedExchanges.Contains(exchangeId))
+            {
+                throw new BusinessException(BackTesterDomainErrorCodes.ExchangeAlreadyExists)
+                    .WithData("ExchangeId", exchangeId);
+            }
+
+            SubscribedExchanges.Add(exchangeId);
+
             return this;
         }
     }

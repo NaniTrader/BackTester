@@ -17,6 +17,9 @@ namespace NaniTrader.BackTester.Migrations
             migrationBuilder.EnsureSchema(
                 name: "Exch");
 
+            migrationBuilder.EnsureSchema(
+                name: "MDP");
+
             migrationBuilder.CreateTable(
                 name: "AbpAuditLogs",
                 columns: table => new
@@ -290,9 +293,9 @@ namespace NaniTrader.BackTester.Migrations
                     Name = table.Column<string>(type: "nvarchar(128)", maxLength: 128, nullable: false),
                     DisplayName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false),
                     Description = table.Column<string>(type: "nvarchar(512)", maxLength: 512, nullable: true),
-                    DefaultValue = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
+                    DefaultValue = table.Column<string>(type: "nvarchar(2048)", maxLength: 2048, nullable: true),
                     IsVisibleToClients = table.Column<bool>(type: "bit", nullable: false),
-                    Providers = table.Column<string>(type: "nvarchar(128)", maxLength: 128, nullable: true),
+                    Providers = table.Column<string>(type: "nvarchar(1024)", maxLength: 1024, nullable: true),
                     IsInherited = table.Column<bool>(type: "bit", nullable: false),
                     IsEncrypted = table.Column<bool>(type: "bit", nullable: false),
                     ExtraProperties = table.Column<string>(type: "nvarchar(max)", nullable: true)
@@ -401,8 +404,7 @@ namespace NaniTrader.BackTester.Migrations
                 schema: "dbo",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(64)", maxLength: 64, nullable: false)
                 },
                 constraints: table =>
@@ -415,8 +417,7 @@ namespace NaniTrader.BackTester.Migrations
                 schema: "Exch",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false),
                     Description = table.Column<string>(type: "nvarchar(2000)", maxLength: 2000, nullable: false),
                     ExtraProperties = table.Column<string>(type: "nvarchar(max)", nullable: false),
@@ -432,6 +433,30 @@ namespace NaniTrader.BackTester.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_NaniExchanges", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "NaniMarketDataProviders",
+                schema: "MDP",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(2000)", maxLength: 2000, nullable: false),
+                    SubscribedExchanges = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ExtraProperties = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ConcurrencyStamp = table.Column<string>(type: "nvarchar(40)", maxLength: 40, nullable: false),
+                    CreationTime = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    CreatorId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    LastModificationTime = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    LastModifierId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false, defaultValue: false),
+                    DeleterId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    DeletionTime = table.Column<DateTime>(type: "datetime2", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_NaniMarketDataProviders", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -730,73 +755,12 @@ namespace NaniTrader.BackTester.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "NaniEquityFutureSecurities",
+                name: "NaniExchangeEquitySecurities",
                 schema: "Exch",
                 columns: table => new
                 {
-                    Id = table.Column<long>(type: "bigint", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    ExchangeId = table.Column<int>(type: "int", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(2000)", maxLength: 2000, nullable: false),
-                    CreationTime = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    CreatorId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    LastModificationTime = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    LastModifierId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    IsDeleted = table.Column<bool>(type: "bit", nullable: false, defaultValue: false),
-                    DeleterId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    DeletionTime = table.Column<DateTime>(type: "datetime2", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_NaniEquityFutureSecurities", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_NaniEquityFutureSecurities_NaniExchanges_ExchangeId",
-                        column: x => x.ExchangeId,
-                        principalSchema: "Exch",
-                        principalTable: "NaniExchanges",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "NaniEquityOptionSecurities",
-                schema: "Exch",
-                columns: table => new
-                {
-                    Id = table.Column<long>(type: "bigint", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    ExchangeId = table.Column<int>(type: "int", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(2000)", maxLength: 2000, nullable: false),
-                    CreationTime = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    CreatorId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    LastModificationTime = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    LastModifierId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    IsDeleted = table.Column<bool>(type: "bit", nullable: false, defaultValue: false),
-                    DeleterId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    DeletionTime = table.Column<DateTime>(type: "datetime2", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_NaniEquityOptionSecurities", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_NaniEquityOptionSecurities_NaniExchanges_ExchangeId",
-                        column: x => x.ExchangeId,
-                        principalSchema: "Exch",
-                        principalTable: "NaniExchanges",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "NaniEquitySecurities",
-                schema: "Exch",
-                columns: table => new
-                {
-                    Id = table.Column<long>(type: "bigint", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    ExchangeId = table.Column<int>(type: "int", nullable: false),
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ExchangeId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false),
                     Description = table.Column<string>(type: "nvarchar(2000)", maxLength: 2000, nullable: false),
                     ISIN = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false),
@@ -811,24 +775,22 @@ namespace NaniTrader.BackTester.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_NaniEquitySecurities", x => x.Id);
+                    table.PrimaryKey("PK_NaniExchangeEquitySecurities", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_NaniEquitySecurities_NaniExchanges_ExchangeId",
+                        name: "FK_NaniExchangeEquitySecurities_NaniExchanges_ExchangeId",
                         column: x => x.ExchangeId,
                         principalSchema: "Exch",
                         principalTable: "NaniExchanges",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
-                name: "NaniIndexFutureSecurities",
+                name: "NaniExchangeIndexSecurities",
                 schema: "Exch",
                 columns: table => new
                 {
-                    Id = table.Column<long>(type: "bigint", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    ExchangeId = table.Column<int>(type: "int", nullable: false),
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ExchangeId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false),
                     Description = table.Column<string>(type: "nvarchar(2000)", maxLength: 2000, nullable: false),
                     CreationTime = table.Column<DateTime>(type: "datetime2", nullable: false),
@@ -841,26 +803,27 @@ namespace NaniTrader.BackTester.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_NaniIndexFutureSecurities", x => x.Id);
+                    table.PrimaryKey("PK_NaniExchangeIndexSecurities", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_NaniIndexFutureSecurities_NaniExchanges_ExchangeId",
+                        name: "FK_NaniExchangeIndexSecurities_NaniExchanges_ExchangeId",
                         column: x => x.ExchangeId,
                         principalSchema: "Exch",
                         principalTable: "NaniExchanges",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
-                name: "NaniIndexOptionSecurities",
-                schema: "Exch",
+                name: "NaniMarketDataProviderEquitySecurities",
+                schema: "MDP",
                 columns: table => new
                 {
-                    Id = table.Column<long>(type: "bigint", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    ExchangeId = table.Column<int>(type: "int", nullable: false),
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ExchangeSecurityId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    MarketDataProviderId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false),
                     Description = table.Column<string>(type: "nvarchar(2000)", maxLength: 2000, nullable: false),
+                    ExtraProperties = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ConcurrencyStamp = table.Column<string>(type: "nvarchar(40)", maxLength: 40, nullable: false),
                     CreationTime = table.Column<DateTime>(type: "datetime2", nullable: false),
                     CreatorId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     LastModificationTime = table.Column<DateTime>(type: "datetime2", nullable: true),
@@ -871,26 +834,27 @@ namespace NaniTrader.BackTester.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_NaniIndexOptionSecurities", x => x.Id);
+                    table.PrimaryKey("PK_NaniMarketDataProviderEquitySecurities", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_NaniIndexOptionSecurities_NaniExchanges_ExchangeId",
-                        column: x => x.ExchangeId,
-                        principalSchema: "Exch",
-                        principalTable: "NaniExchanges",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        name: "FK_NaniMarketDataProviderEquitySecurities_NaniMarketDataProviders_MarketDataProviderId",
+                        column: x => x.MarketDataProviderId,
+                        principalSchema: "MDP",
+                        principalTable: "NaniMarketDataProviders",
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
-                name: "NaniIndexSecurities",
-                schema: "Exch",
+                name: "NaniMarketDataProviderIndexSecurities",
+                schema: "MDP",
                 columns: table => new
                 {
-                    Id = table.Column<long>(type: "bigint", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    ExchangeId = table.Column<int>(type: "int", nullable: false),
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ExchangeSecurityId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    MarketDataProviderId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false),
                     Description = table.Column<string>(type: "nvarchar(2000)", maxLength: 2000, nullable: false),
+                    ExtraProperties = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ConcurrencyStamp = table.Column<string>(type: "nvarchar(40)", maxLength: 40, nullable: false),
                     CreationTime = table.Column<DateTime>(type: "datetime2", nullable: false),
                     CreatorId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     LastModificationTime = table.Column<DateTime>(type: "datetime2", nullable: true),
@@ -901,14 +865,13 @@ namespace NaniTrader.BackTester.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_NaniIndexSecurities", x => x.Id);
+                    table.PrimaryKey("PK_NaniMarketDataProviderIndexSecurities", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_NaniIndexSecurities_NaniExchanges_ExchangeId",
-                        column: x => x.ExchangeId,
-                        principalSchema: "Exch",
-                        principalTable: "NaniExchanges",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        name: "FK_NaniMarketDataProviderIndexSecurities_NaniMarketDataProviders_MarketDataProviderId",
+                        column: x => x.MarketDataProviderId,
+                        principalSchema: "MDP",
+                        principalTable: "NaniMarketDataProviders",
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -964,6 +927,298 @@ namespace NaniTrader.BackTester.Migrations
                         principalTable: "AbpEntityChanges",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "NaniExchangeEquityFutureSecurities",
+                schema: "Exch",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ExchangeId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    UnderlyingId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(2000)", maxLength: 2000, nullable: false),
+                    CreationTime = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    CreatorId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    LastModificationTime = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    LastModifierId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false, defaultValue: false),
+                    DeleterId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    DeletionTime = table.Column<DateTime>(type: "datetime2", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_NaniExchangeEquityFutureSecurities", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_NaniExchangeEquityFutureSecurities_NaniExchangeEquitySecurities_UnderlyingId",
+                        column: x => x.UnderlyingId,
+                        principalSchema: "Exch",
+                        principalTable: "NaniExchangeEquitySecurities",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_NaniExchangeEquityFutureSecurities_NaniExchanges_ExchangeId",
+                        column: x => x.ExchangeId,
+                        principalSchema: "Exch",
+                        principalTable: "NaniExchanges",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "NaniExchangeEquityOptionSecurities",
+                schema: "Exch",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ExchangeId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    UnderlyingId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(2000)", maxLength: 2000, nullable: false),
+                    CreationTime = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    CreatorId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    LastModificationTime = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    LastModifierId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false, defaultValue: false),
+                    DeleterId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    DeletionTime = table.Column<DateTime>(type: "datetime2", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_NaniExchangeEquityOptionSecurities", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_NaniExchangeEquityOptionSecurities_NaniExchangeEquitySecurities_UnderlyingId",
+                        column: x => x.UnderlyingId,
+                        principalSchema: "Exch",
+                        principalTable: "NaniExchangeEquitySecurities",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_NaniExchangeEquityOptionSecurities_NaniExchanges_ExchangeId",
+                        column: x => x.ExchangeId,
+                        principalSchema: "Exch",
+                        principalTable: "NaniExchanges",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "NaniExchangeIndexFutureSecurities",
+                schema: "Exch",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ExchangeId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    UnderlyingId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(2000)", maxLength: 2000, nullable: false),
+                    CreationTime = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    CreatorId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    LastModificationTime = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    LastModifierId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false, defaultValue: false),
+                    DeleterId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    DeletionTime = table.Column<DateTime>(type: "datetime2", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_NaniExchangeIndexFutureSecurities", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_NaniExchangeIndexFutureSecurities_NaniExchangeIndexSecurities_UnderlyingId",
+                        column: x => x.UnderlyingId,
+                        principalSchema: "Exch",
+                        principalTable: "NaniExchangeIndexSecurities",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_NaniExchangeIndexFutureSecurities_NaniExchanges_ExchangeId",
+                        column: x => x.ExchangeId,
+                        principalSchema: "Exch",
+                        principalTable: "NaniExchanges",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "NaniExchangeIndexOptionSecurities",
+                schema: "Exch",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ExchangeId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    UnderlyingId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(2000)", maxLength: 2000, nullable: false),
+                    CreationTime = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    CreatorId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    LastModificationTime = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    LastModifierId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false, defaultValue: false),
+                    DeleterId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    DeletionTime = table.Column<DateTime>(type: "datetime2", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_NaniExchangeIndexOptionSecurities", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_NaniExchangeIndexOptionSecurities_NaniExchangeIndexSecurities_UnderlyingId",
+                        column: x => x.UnderlyingId,
+                        principalSchema: "Exch",
+                        principalTable: "NaniExchangeIndexSecurities",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_NaniExchangeIndexOptionSecurities_NaniExchanges_ExchangeId",
+                        column: x => x.ExchangeId,
+                        principalSchema: "Exch",
+                        principalTable: "NaniExchanges",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "NaniMarketDataProviderEquityFutureSecurities",
+                schema: "MDP",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ExchangeSecurityId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    MarketDataProviderId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    UnderlyingId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(2000)", maxLength: 2000, nullable: false),
+                    ExtraProperties = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ConcurrencyStamp = table.Column<string>(type: "nvarchar(40)", maxLength: 40, nullable: false),
+                    CreationTime = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    CreatorId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    LastModificationTime = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    LastModifierId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false, defaultValue: false),
+                    DeleterId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    DeletionTime = table.Column<DateTime>(type: "datetime2", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_NaniMarketDataProviderEquityFutureSecurities", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_NaniMarketDataProviderEquityFutureSecurities_NaniMarketDataProviderEquitySecurities_UnderlyingId",
+                        column: x => x.UnderlyingId,
+                        principalSchema: "MDP",
+                        principalTable: "NaniMarketDataProviderEquitySecurities",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_NaniMarketDataProviderEquityFutureSecurities_NaniMarketDataProviders_MarketDataProviderId",
+                        column: x => x.MarketDataProviderId,
+                        principalSchema: "MDP",
+                        principalTable: "NaniMarketDataProviders",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "NaniMarketDataProviderEquityOptionSecurities",
+                schema: "MDP",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ExchangeSecurityId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    MarketDataProviderId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    UnderlyingId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(2000)", maxLength: 2000, nullable: false),
+                    ExtraProperties = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ConcurrencyStamp = table.Column<string>(type: "nvarchar(40)", maxLength: 40, nullable: false),
+                    CreationTime = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    CreatorId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    LastModificationTime = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    LastModifierId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false, defaultValue: false),
+                    DeleterId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    DeletionTime = table.Column<DateTime>(type: "datetime2", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_NaniMarketDataProviderEquityOptionSecurities", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_NaniMarketDataProviderEquityOptionSecurities_NaniMarketDataProviderEquitySecurities_UnderlyingId",
+                        column: x => x.UnderlyingId,
+                        principalSchema: "MDP",
+                        principalTable: "NaniMarketDataProviderEquitySecurities",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_NaniMarketDataProviderEquityOptionSecurities_NaniMarketDataProviders_MarketDataProviderId",
+                        column: x => x.MarketDataProviderId,
+                        principalSchema: "MDP",
+                        principalTable: "NaniMarketDataProviders",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "NaniMarketDataProviderIndexFutureSecurities",
+                schema: "MDP",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ExchangeSecurityId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    MarketDataProviderId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    UnderlyingId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(2000)", maxLength: 2000, nullable: false),
+                    ExtraProperties = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ConcurrencyStamp = table.Column<string>(type: "nvarchar(40)", maxLength: 40, nullable: false),
+                    CreationTime = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    CreatorId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    LastModificationTime = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    LastModifierId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false, defaultValue: false),
+                    DeleterId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    DeletionTime = table.Column<DateTime>(type: "datetime2", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_NaniMarketDataProviderIndexFutureSecurities", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_NaniMarketDataProviderIndexFutureSecurities_NaniMarketDataProviderIndexSecurities_UnderlyingId",
+                        column: x => x.UnderlyingId,
+                        principalSchema: "MDP",
+                        principalTable: "NaniMarketDataProviderIndexSecurities",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_NaniMarketDataProviderIndexFutureSecurities_NaniMarketDataProviders_MarketDataProviderId",
+                        column: x => x.MarketDataProviderId,
+                        principalSchema: "MDP",
+                        principalTable: "NaniMarketDataProviders",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "NaniMarketDataProviderIndexOptionSecurities",
+                schema: "MDP",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ExchangeSecurityId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    MarketDataProviderId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    UnderlyingId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(2000)", maxLength: 2000, nullable: false),
+                    ExtraProperties = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ConcurrencyStamp = table.Column<string>(type: "nvarchar(40)", maxLength: 40, nullable: false),
+                    CreationTime = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    CreatorId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    LastModificationTime = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    LastModifierId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false, defaultValue: false),
+                    DeleterId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    DeletionTime = table.Column<DateTime>(type: "datetime2", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_NaniMarketDataProviderIndexOptionSecurities", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_NaniMarketDataProviderIndexOptionSecurities_NaniMarketDataProviderIndexSecurities_UnderlyingId",
+                        column: x => x.UnderlyingId,
+                        principalSchema: "MDP",
+                        principalTable: "NaniMarketDataProviderIndexSecurities",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_NaniMarketDataProviderIndexOptionSecurities_NaniMarketDataProviders_MarketDataProviderId",
+                        column: x => x.MarketDataProviderId,
+                        principalSchema: "MDP",
+                        principalTable: "NaniMarketDataProviders",
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -1206,40 +1461,124 @@ namespace NaniTrader.BackTester.Migrations
                 column: "UserName");
 
             migrationBuilder.CreateIndex(
-                name: "IX_NaniEquityFutureSecurities_ExchangeId",
+                name: "IX_NaniExchangeEquityFutureSecurities_ExchangeId",
                 schema: "Exch",
-                table: "NaniEquityFutureSecurities",
+                table: "NaniExchangeEquityFutureSecurities",
                 column: "ExchangeId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_NaniEquityOptionSecurities_ExchangeId",
+                name: "IX_NaniExchangeEquityFutureSecurities_UnderlyingId",
                 schema: "Exch",
-                table: "NaniEquityOptionSecurities",
+                table: "NaniExchangeEquityFutureSecurities",
+                column: "UnderlyingId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_NaniExchangeEquityOptionSecurities_ExchangeId",
+                schema: "Exch",
+                table: "NaniExchangeEquityOptionSecurities",
                 column: "ExchangeId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_NaniEquitySecurities_ExchangeId",
+                name: "IX_NaniExchangeEquityOptionSecurities_UnderlyingId",
                 schema: "Exch",
-                table: "NaniEquitySecurities",
+                table: "NaniExchangeEquityOptionSecurities",
+                column: "UnderlyingId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_NaniExchangeEquitySecurities_ExchangeId",
+                schema: "Exch",
+                table: "NaniExchangeEquitySecurities",
                 column: "ExchangeId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_NaniIndexFutureSecurities_ExchangeId",
+                name: "IX_NaniExchangeIndexFutureSecurities_ExchangeId",
                 schema: "Exch",
-                table: "NaniIndexFutureSecurities",
+                table: "NaniExchangeIndexFutureSecurities",
                 column: "ExchangeId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_NaniIndexOptionSecurities_ExchangeId",
+                name: "IX_NaniExchangeIndexFutureSecurities_UnderlyingId",
                 schema: "Exch",
-                table: "NaniIndexOptionSecurities",
+                table: "NaniExchangeIndexFutureSecurities",
+                column: "UnderlyingId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_NaniExchangeIndexOptionSecurities_ExchangeId",
+                schema: "Exch",
+                table: "NaniExchangeIndexOptionSecurities",
                 column: "ExchangeId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_NaniIndexSecurities_ExchangeId",
+                name: "IX_NaniExchangeIndexOptionSecurities_UnderlyingId",
                 schema: "Exch",
-                table: "NaniIndexSecurities",
+                table: "NaniExchangeIndexOptionSecurities",
+                column: "UnderlyingId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_NaniExchangeIndexSecurities_ExchangeId",
+                schema: "Exch",
+                table: "NaniExchangeIndexSecurities",
                 column: "ExchangeId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_NaniMarketDataProviderEquityFutureSecurities_MarketDataProviderId",
+                schema: "MDP",
+                table: "NaniMarketDataProviderEquityFutureSecurities",
+                column: "MarketDataProviderId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_NaniMarketDataProviderEquityFutureSecurities_UnderlyingId",
+                schema: "MDP",
+                table: "NaniMarketDataProviderEquityFutureSecurities",
+                column: "UnderlyingId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_NaniMarketDataProviderEquityOptionSecurities_MarketDataProviderId",
+                schema: "MDP",
+                table: "NaniMarketDataProviderEquityOptionSecurities",
+                column: "MarketDataProviderId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_NaniMarketDataProviderEquityOptionSecurities_UnderlyingId",
+                schema: "MDP",
+                table: "NaniMarketDataProviderEquityOptionSecurities",
+                column: "UnderlyingId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_NaniMarketDataProviderEquitySecurities_MarketDataProviderId",
+                schema: "MDP",
+                table: "NaniMarketDataProviderEquitySecurities",
+                column: "MarketDataProviderId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_NaniMarketDataProviderIndexFutureSecurities_MarketDataProviderId",
+                schema: "MDP",
+                table: "NaniMarketDataProviderIndexFutureSecurities",
+                column: "MarketDataProviderId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_NaniMarketDataProviderIndexFutureSecurities_UnderlyingId",
+                schema: "MDP",
+                table: "NaniMarketDataProviderIndexFutureSecurities",
+                column: "UnderlyingId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_NaniMarketDataProviderIndexOptionSecurities_MarketDataProviderId",
+                schema: "MDP",
+                table: "NaniMarketDataProviderIndexOptionSecurities",
+                column: "MarketDataProviderId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_NaniMarketDataProviderIndexOptionSecurities_UnderlyingId",
+                schema: "MDP",
+                table: "NaniMarketDataProviderIndexOptionSecurities",
+                column: "UnderlyingId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_NaniMarketDataProviderIndexSecurities_MarketDataProviderId",
+                schema: "MDP",
+                table: "NaniMarketDataProviderIndexSecurities",
+                column: "MarketDataProviderId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_OpenIddictApplications_ClientId",
@@ -1349,28 +1688,36 @@ namespace NaniTrader.BackTester.Migrations
                 schema: "dbo");
 
             migrationBuilder.DropTable(
-                name: "NaniEquityFutureSecurities",
+                name: "NaniExchangeEquityFutureSecurities",
                 schema: "Exch");
 
             migrationBuilder.DropTable(
-                name: "NaniEquityOptionSecurities",
+                name: "NaniExchangeEquityOptionSecurities",
                 schema: "Exch");
 
             migrationBuilder.DropTable(
-                name: "NaniEquitySecurities",
+                name: "NaniExchangeIndexFutureSecurities",
                 schema: "Exch");
 
             migrationBuilder.DropTable(
-                name: "NaniIndexFutureSecurities",
+                name: "NaniExchangeIndexOptionSecurities",
                 schema: "Exch");
 
             migrationBuilder.DropTable(
-                name: "NaniIndexOptionSecurities",
-                schema: "Exch");
+                name: "NaniMarketDataProviderEquityFutureSecurities",
+                schema: "MDP");
 
             migrationBuilder.DropTable(
-                name: "NaniIndexSecurities",
-                schema: "Exch");
+                name: "NaniMarketDataProviderEquityOptionSecurities",
+                schema: "MDP");
+
+            migrationBuilder.DropTable(
+                name: "NaniMarketDataProviderIndexFutureSecurities",
+                schema: "MDP");
+
+            migrationBuilder.DropTable(
+                name: "NaniMarketDataProviderIndexOptionSecurities",
+                schema: "MDP");
 
             migrationBuilder.DropTable(
                 name: "OpenIddictScopes");
@@ -1394,14 +1741,34 @@ namespace NaniTrader.BackTester.Migrations
                 name: "AbpUsers");
 
             migrationBuilder.DropTable(
-                name: "NaniExchanges",
+                name: "NaniExchangeEquitySecurities",
                 schema: "Exch");
+
+            migrationBuilder.DropTable(
+                name: "NaniExchangeIndexSecurities",
+                schema: "Exch");
+
+            migrationBuilder.DropTable(
+                name: "NaniMarketDataProviderEquitySecurities",
+                schema: "MDP");
+
+            migrationBuilder.DropTable(
+                name: "NaniMarketDataProviderIndexSecurities",
+                schema: "MDP");
 
             migrationBuilder.DropTable(
                 name: "OpenIddictAuthorizations");
 
             migrationBuilder.DropTable(
                 name: "AbpAuditLogs");
+
+            migrationBuilder.DropTable(
+                name: "NaniExchanges",
+                schema: "Exch");
+
+            migrationBuilder.DropTable(
+                name: "NaniMarketDataProviders",
+                schema: "MDP");
 
             migrationBuilder.DropTable(
                 name: "OpenIddictApplications");

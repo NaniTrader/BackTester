@@ -12,26 +12,24 @@ using Volo.Abp.Domain.Entities.Auditing;
 
 namespace NaniTrader.BackTester.Exchanges.Securities
 {
-    public class EquityFutureSecurity : FullAuditedEntity<long>
+    public class EquityFutureSecurity : FullAuditedEntity<Guid>
     {
         // here for ef core
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor.
         private EquityFutureSecurity() { }
 #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor.
 
-        public Exchange? Exchange { get; private set; }
-        public int ExchangeId { get; private set; }
-        public EquitySecurity? EquitySecurity { get; private set; }
-        public long EquitySecurityId { get; private set; }
+        public Exchange Exchange { get; private set; }
+        public EquitySecurity Underlying { get; private set; }
         public string Name { get; private set; }
         public string Description { get; private set; }
 
-        internal EquityFutureSecurity(string name, string description, int exchangeId, long equitySecurityId)
+        internal EquityFutureSecurity(Guid id, string name, string description, Exchange exchange, EquitySecurity underlying) : base(id)
         {
             SetName(name);
             SetDescription(description);
-            ExchangeId = exchangeId;
-            EquitySecurityId = equitySecurityId;
+            Underlying = underlying;
+            Exchange = exchange;
         }
 
         [MemberNotNull(nameof(Name))]

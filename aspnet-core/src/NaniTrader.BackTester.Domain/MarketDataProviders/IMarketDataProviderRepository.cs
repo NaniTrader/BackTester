@@ -7,7 +7,7 @@ using Volo.Abp.Domain.Repositories;
 
 namespace NaniTrader.BackTester.MarketDataProviders
 {
-    public interface IMarketDataProviderRepository : IRepository<MarketDataProvider, int>
+    public interface IMarketDataProviderRepository : IRepository<MarketDataProvider, Guid>
     {
         Task<MarketDataProvider?> FindByNameAsync(string name);
 

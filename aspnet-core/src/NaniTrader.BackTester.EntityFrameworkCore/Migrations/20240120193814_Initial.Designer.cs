@@ -13,7 +13,7 @@ using Volo.Abp.EntityFrameworkCore;
 namespace NaniTrader.BackTester.Migrations
 {
     [DbContext(typeof(BackTesterDbContext))]
-    [Migration("20240109193419_Initial")]
+    [Migration("20240120193814_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -29,11 +29,8 @@ namespace NaniTrader.BackTester.Migrations
 
             modelBuilder.Entity("NaniTrader.BackTester.Countries.Country", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -45,197 +42,10 @@ namespace NaniTrader.BackTester.Migrations
                     b.ToTable("NaniCountries", "dbo");
                 });
 
-            modelBuilder.Entity("NaniTrader.BackTester.Exchanges.EquityFutureSecurity", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
-
-                    b.Property<DateTime>("CreationTime")
-                        .HasColumnType("datetime2")
-                        .HasColumnName("CreationTime");
-
-                    b.Property<Guid?>("CreatorId")
-                        .HasColumnType("uniqueidentifier")
-                        .HasColumnName("CreatorId");
-
-                    b.Property<Guid?>("DeleterId")
-                        .HasColumnType("uniqueidentifier")
-                        .HasColumnName("DeleterId");
-
-                    b.Property<DateTime?>("DeletionTime")
-                        .HasColumnType("datetime2")
-                        .HasColumnName("DeletionTime");
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasMaxLength(2000)
-                        .HasColumnType("nvarchar(2000)");
-
-                    b.Property<int>("ExchangeId")
-                        .HasColumnType("int");
-
-                    b.Property<bool>("IsDeleted")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
-                        .HasDefaultValue(false)
-                        .HasColumnName("IsDeleted");
-
-                    b.Property<DateTime?>("LastModificationTime")
-                        .HasColumnType("datetime2")
-                        .HasColumnName("LastModificationTime");
-
-                    b.Property<Guid?>("LastModifierId")
-                        .HasColumnType("uniqueidentifier")
-                        .HasColumnName("LastModifierId");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ExchangeId");
-
-                    b.ToTable("NaniEquityFutureSecurities", "Exch");
-                });
-
-            modelBuilder.Entity("NaniTrader.BackTester.Exchanges.EquityOptionSecurity", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
-
-                    b.Property<DateTime>("CreationTime")
-                        .HasColumnType("datetime2")
-                        .HasColumnName("CreationTime");
-
-                    b.Property<Guid?>("CreatorId")
-                        .HasColumnType("uniqueidentifier")
-                        .HasColumnName("CreatorId");
-
-                    b.Property<Guid?>("DeleterId")
-                        .HasColumnType("uniqueidentifier")
-                        .HasColumnName("DeleterId");
-
-                    b.Property<DateTime?>("DeletionTime")
-                        .HasColumnType("datetime2")
-                        .HasColumnName("DeletionTime");
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasMaxLength(2000)
-                        .HasColumnType("nvarchar(2000)");
-
-                    b.Property<int>("ExchangeId")
-                        .HasColumnType("int");
-
-                    b.Property<bool>("IsDeleted")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
-                        .HasDefaultValue(false)
-                        .HasColumnName("IsDeleted");
-
-                    b.Property<DateTime?>("LastModificationTime")
-                        .HasColumnType("datetime2")
-                        .HasColumnName("LastModificationTime");
-
-                    b.Property<Guid?>("LastModifierId")
-                        .HasColumnType("uniqueidentifier")
-                        .HasColumnName("LastModifierId");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ExchangeId");
-
-                    b.ToTable("NaniEquityOptionSecurities", "Exch");
-                });
-
-            modelBuilder.Entity("NaniTrader.BackTester.Exchanges.EquitySecurity", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
-
-                    b.Property<DateTime>("CreationTime")
-                        .HasColumnType("datetime2")
-                        .HasColumnName("CreationTime");
-
-                    b.Property<Guid?>("CreatorId")
-                        .HasColumnType("uniqueidentifier")
-                        .HasColumnName("CreatorId");
-
-                    b.Property<Guid?>("DeleterId")
-                        .HasColumnType("uniqueidentifier")
-                        .HasColumnName("DeleterId");
-
-                    b.Property<DateTime?>("DeletionTime")
-                        .HasColumnType("datetime2")
-                        .HasColumnName("DeletionTime");
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasMaxLength(2000)
-                        .HasColumnType("nvarchar(2000)");
-
-                    b.Property<int>("ExchangeId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("ISIN")
-                        .IsRequired()
-                        .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
-
-                    b.Property<bool>("IsDeleted")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
-                        .HasDefaultValue(false)
-                        .HasColumnName("IsDeleted");
-
-                    b.Property<DateTime?>("LastModificationTime")
-                        .HasColumnType("datetime2")
-                        .HasColumnName("LastModificationTime");
-
-                    b.Property<Guid?>("LastModifierId")
-                        .HasColumnType("uniqueidentifier")
-                        .HasColumnName("LastModifierId");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
-
-                    b.Property<string>("TickerSymbol")
-                        .IsRequired()
-                        .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ExchangeId");
-
-                    b.ToTable("NaniEquitySecurities", "Exch");
-                });
-
             modelBuilder.Entity("NaniTrader.BackTester.Exchanges.Exchange", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
@@ -294,13 +104,10 @@ namespace NaniTrader.BackTester.Migrations
                     b.ToTable("NaniExchanges", "Exch");
                 });
 
-            modelBuilder.Entity("NaniTrader.BackTester.Exchanges.IndexFutureSecurity", b =>
+            modelBuilder.Entity("NaniTrader.BackTester.Exchanges.Securities.EquityFutureSecurity", b =>
                 {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("CreationTime")
                         .HasColumnType("datetime2")
@@ -323,8 +130,8 @@ namespace NaniTrader.BackTester.Migrations
                         .HasMaxLength(2000)
                         .HasColumnType("nvarchar(2000)");
 
-                    b.Property<int>("ExchangeId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("ExchangeId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<bool>("IsDeleted")
                         .ValueGeneratedOnAdd()
@@ -345,20 +152,22 @@ namespace NaniTrader.BackTester.Migrations
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
 
+                    b.Property<Guid>("UnderlyingId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.HasKey("Id");
 
                     b.HasIndex("ExchangeId");
 
-                    b.ToTable("NaniIndexFutureSecurities", "Exch");
+                    b.HasIndex("UnderlyingId");
+
+                    b.ToTable("NaniExchangeEquityFutureSecurities", "Exch");
                 });
 
-            modelBuilder.Entity("NaniTrader.BackTester.Exchanges.IndexOptionSecurity", b =>
+            modelBuilder.Entity("NaniTrader.BackTester.Exchanges.Securities.EquityOptionSecurity", b =>
                 {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("CreationTime")
                         .HasColumnType("datetime2")
@@ -381,8 +190,8 @@ namespace NaniTrader.BackTester.Migrations
                         .HasMaxLength(2000)
                         .HasColumnType("nvarchar(2000)");
 
-                    b.Property<int>("ExchangeId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("ExchangeId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<bool>("IsDeleted")
                         .ValueGeneratedOnAdd()
@@ -403,20 +212,22 @@ namespace NaniTrader.BackTester.Migrations
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
 
+                    b.Property<Guid>("UnderlyingId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.HasKey("Id");
 
                     b.HasIndex("ExchangeId");
 
-                    b.ToTable("NaniIndexOptionSecurities", "Exch");
+                    b.HasIndex("UnderlyingId");
+
+                    b.ToTable("NaniExchangeEquityOptionSecurities", "Exch");
                 });
 
-            modelBuilder.Entity("NaniTrader.BackTester.Exchanges.IndexSecurity", b =>
+            modelBuilder.Entity("NaniTrader.BackTester.Exchanges.Securities.EquitySecurity", b =>
                 {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("CreationTime")
                         .HasColumnType("datetime2")
@@ -439,8 +250,193 @@ namespace NaniTrader.BackTester.Migrations
                         .HasMaxLength(2000)
                         .HasColumnType("nvarchar(2000)");
 
-                    b.Property<int>("ExchangeId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("ExchangeId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("ISIN")
+                        .IsRequired()
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<bool>("IsDeleted")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false)
+                        .HasColumnName("IsDeleted");
+
+                    b.Property<DateTime?>("LastModificationTime")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("LastModificationTime");
+
+                    b.Property<Guid?>("LastModifierId")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("LastModifierId");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<string>("TickerSymbol")
+                        .IsRequired()
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ExchangeId");
+
+                    b.ToTable("NaniExchangeEquitySecurities", "Exch");
+                });
+
+            modelBuilder.Entity("NaniTrader.BackTester.Exchanges.Securities.IndexFutureSecurity", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreationTime")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("CreationTime");
+
+                    b.Property<Guid?>("CreatorId")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("CreatorId");
+
+                    b.Property<Guid?>("DeleterId")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("DeleterId");
+
+                    b.Property<DateTime?>("DeletionTime")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("DeletionTime");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(2000)
+                        .HasColumnType("nvarchar(2000)");
+
+                    b.Property<Guid>("ExchangeId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<bool>("IsDeleted")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false)
+                        .HasColumnName("IsDeleted");
+
+                    b.Property<DateTime?>("LastModificationTime")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("LastModificationTime");
+
+                    b.Property<Guid?>("LastModifierId")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("LastModifierId");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<Guid>("UnderlyingId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ExchangeId");
+
+                    b.HasIndex("UnderlyingId");
+
+                    b.ToTable("NaniExchangeIndexFutureSecurities", "Exch");
+                });
+
+            modelBuilder.Entity("NaniTrader.BackTester.Exchanges.Securities.IndexOptionSecurity", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreationTime")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("CreationTime");
+
+                    b.Property<Guid?>("CreatorId")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("CreatorId");
+
+                    b.Property<Guid?>("DeleterId")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("DeleterId");
+
+                    b.Property<DateTime?>("DeletionTime")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("DeletionTime");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(2000)
+                        .HasColumnType("nvarchar(2000)");
+
+                    b.Property<Guid>("ExchangeId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<bool>("IsDeleted")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false)
+                        .HasColumnName("IsDeleted");
+
+                    b.Property<DateTime?>("LastModificationTime")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("LastModificationTime");
+
+                    b.Property<Guid?>("LastModifierId")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("LastModifierId");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<Guid>("UnderlyingId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ExchangeId");
+
+                    b.HasIndex("UnderlyingId");
+
+                    b.ToTable("NaniExchangeIndexOptionSecurities", "Exch");
+                });
+
+            modelBuilder.Entity("NaniTrader.BackTester.Exchanges.Securities.IndexSecurity", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreationTime")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("CreationTime");
+
+                    b.Property<Guid?>("CreatorId")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("CreatorId");
+
+                    b.Property<Guid?>("DeleterId")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("DeleterId");
+
+                    b.Property<DateTime?>("DeletionTime")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("DeletionTime");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(2000)
+                        .HasColumnType("nvarchar(2000)");
+
+                    b.Property<Guid>("ExchangeId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<bool>("IsDeleted")
                         .ValueGeneratedOnAdd()
@@ -465,7 +461,513 @@ namespace NaniTrader.BackTester.Migrations
 
                     b.HasIndex("ExchangeId");
 
-                    b.ToTable("NaniIndexSecurities", "Exch");
+                    b.ToTable("NaniExchangeIndexSecurities", "Exch");
+                });
+
+            modelBuilder.Entity("NaniTrader.BackTester.MarketDataProviders.MarketDataProvider", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("ConcurrencyStamp")
+                        .IsConcurrencyToken()
+                        .IsRequired()
+                        .HasMaxLength(40)
+                        .HasColumnType("nvarchar(40)")
+                        .HasColumnName("ConcurrencyStamp");
+
+                    b.Property<DateTime>("CreationTime")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("CreationTime");
+
+                    b.Property<Guid?>("CreatorId")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("CreatorId");
+
+                    b.Property<Guid?>("DeleterId")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("DeleterId");
+
+                    b.Property<DateTime?>("DeletionTime")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("DeletionTime");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(2000)
+                        .HasColumnType("nvarchar(2000)");
+
+                    b.Property<string>("ExtraProperties")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("ExtraProperties");
+
+                    b.Property<bool>("IsDeleted")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false)
+                        .HasColumnName("IsDeleted");
+
+                    b.Property<DateTime?>("LastModificationTime")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("LastModificationTime");
+
+                    b.Property<Guid?>("LastModifierId")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("LastModifierId");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<string>("SubscribedExchanges")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("NaniMarketDataProviders", "MDP");
+                });
+
+            modelBuilder.Entity("NaniTrader.BackTester.MarketDataProviders.Securities.EquityFutureSecurity", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("ConcurrencyStamp")
+                        .IsConcurrencyToken()
+                        .IsRequired()
+                        .HasMaxLength(40)
+                        .HasColumnType("nvarchar(40)")
+                        .HasColumnName("ConcurrencyStamp");
+
+                    b.Property<DateTime>("CreationTime")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("CreationTime");
+
+                    b.Property<Guid?>("CreatorId")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("CreatorId");
+
+                    b.Property<Guid?>("DeleterId")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("DeleterId");
+
+                    b.Property<DateTime?>("DeletionTime")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("DeletionTime");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(2000)
+                        .HasColumnType("nvarchar(2000)");
+
+                    b.Property<Guid>("ExchangeSecurityId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("ExtraProperties")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("ExtraProperties");
+
+                    b.Property<bool>("IsDeleted")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false)
+                        .HasColumnName("IsDeleted");
+
+                    b.Property<DateTime?>("LastModificationTime")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("LastModificationTime");
+
+                    b.Property<Guid?>("LastModifierId")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("LastModifierId");
+
+                    b.Property<Guid>("MarketDataProviderId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<Guid>("UnderlyingId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("MarketDataProviderId");
+
+                    b.HasIndex("UnderlyingId");
+
+                    b.ToTable("NaniMarketDataProviderEquityFutureSecurities", "MDP");
+                });
+
+            modelBuilder.Entity("NaniTrader.BackTester.MarketDataProviders.Securities.EquityOptionSecurity", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("ConcurrencyStamp")
+                        .IsConcurrencyToken()
+                        .IsRequired()
+                        .HasMaxLength(40)
+                        .HasColumnType("nvarchar(40)")
+                        .HasColumnName("ConcurrencyStamp");
+
+                    b.Property<DateTime>("CreationTime")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("CreationTime");
+
+                    b.Property<Guid?>("CreatorId")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("CreatorId");
+
+                    b.Property<Guid?>("DeleterId")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("DeleterId");
+
+                    b.Property<DateTime?>("DeletionTime")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("DeletionTime");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(2000)
+                        .HasColumnType("nvarchar(2000)");
+
+                    b.Property<Guid>("ExchangeSecurityId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("ExtraProperties")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("ExtraProperties");
+
+                    b.Property<bool>("IsDeleted")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false)
+                        .HasColumnName("IsDeleted");
+
+                    b.Property<DateTime?>("LastModificationTime")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("LastModificationTime");
+
+                    b.Property<Guid?>("LastModifierId")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("LastModifierId");
+
+                    b.Property<Guid>("MarketDataProviderId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<Guid>("UnderlyingId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("MarketDataProviderId");
+
+                    b.HasIndex("UnderlyingId");
+
+                    b.ToTable("NaniMarketDataProviderEquityOptionSecurities", "MDP");
+                });
+
+            modelBuilder.Entity("NaniTrader.BackTester.MarketDataProviders.Securities.EquitySecurity", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("ConcurrencyStamp")
+                        .IsConcurrencyToken()
+                        .IsRequired()
+                        .HasMaxLength(40)
+                        .HasColumnType("nvarchar(40)")
+                        .HasColumnName("ConcurrencyStamp");
+
+                    b.Property<DateTime>("CreationTime")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("CreationTime");
+
+                    b.Property<Guid?>("CreatorId")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("CreatorId");
+
+                    b.Property<Guid?>("DeleterId")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("DeleterId");
+
+                    b.Property<DateTime?>("DeletionTime")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("DeletionTime");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(2000)
+                        .HasColumnType("nvarchar(2000)");
+
+                    b.Property<Guid>("ExchangeSecurityId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("ExtraProperties")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("ExtraProperties");
+
+                    b.Property<bool>("IsDeleted")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false)
+                        .HasColumnName("IsDeleted");
+
+                    b.Property<DateTime?>("LastModificationTime")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("LastModificationTime");
+
+                    b.Property<Guid?>("LastModifierId")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("LastModifierId");
+
+                    b.Property<Guid>("MarketDataProviderId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("MarketDataProviderId");
+
+                    b.ToTable("NaniMarketDataProviderEquitySecurities", "MDP");
+                });
+
+            modelBuilder.Entity("NaniTrader.BackTester.MarketDataProviders.Securities.IndexFutureSecurity", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("ConcurrencyStamp")
+                        .IsConcurrencyToken()
+                        .IsRequired()
+                        .HasMaxLength(40)
+                        .HasColumnType("nvarchar(40)")
+                        .HasColumnName("ConcurrencyStamp");
+
+                    b.Property<DateTime>("CreationTime")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("CreationTime");
+
+                    b.Property<Guid?>("CreatorId")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("CreatorId");
+
+                    b.Property<Guid?>("DeleterId")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("DeleterId");
+
+                    b.Property<DateTime?>("DeletionTime")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("DeletionTime");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(2000)
+                        .HasColumnType("nvarchar(2000)");
+
+                    b.Property<Guid>("ExchangeSecurityId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("ExtraProperties")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("ExtraProperties");
+
+                    b.Property<bool>("IsDeleted")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false)
+                        .HasColumnName("IsDeleted");
+
+                    b.Property<DateTime?>("LastModificationTime")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("LastModificationTime");
+
+                    b.Property<Guid?>("LastModifierId")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("LastModifierId");
+
+                    b.Property<Guid>("MarketDataProviderId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<Guid>("UnderlyingId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("MarketDataProviderId");
+
+                    b.HasIndex("UnderlyingId");
+
+                    b.ToTable("NaniMarketDataProviderIndexFutureSecurities", "MDP");
+                });
+
+            modelBuilder.Entity("NaniTrader.BackTester.MarketDataProviders.Securities.IndexOptionSecurity", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("ConcurrencyStamp")
+                        .IsConcurrencyToken()
+                        .IsRequired()
+                        .HasMaxLength(40)
+                        .HasColumnType("nvarchar(40)")
+                        .HasColumnName("ConcurrencyStamp");
+
+                    b.Property<DateTime>("CreationTime")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("CreationTime");
+
+                    b.Property<Guid?>("CreatorId")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("CreatorId");
+
+                    b.Property<Guid?>("DeleterId")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("DeleterId");
+
+                    b.Property<DateTime?>("DeletionTime")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("DeletionTime");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(2000)
+                        .HasColumnType("nvarchar(2000)");
+
+                    b.Property<Guid>("ExchangeSecurityId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("ExtraProperties")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("ExtraProperties");
+
+                    b.Property<bool>("IsDeleted")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false)
+                        .HasColumnName("IsDeleted");
+
+                    b.Property<DateTime?>("LastModificationTime")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("LastModificationTime");
+
+                    b.Property<Guid?>("LastModifierId")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("LastModifierId");
+
+                    b.Property<Guid>("MarketDataProviderId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<Guid>("UnderlyingId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("MarketDataProviderId");
+
+                    b.HasIndex("UnderlyingId");
+
+                    b.ToTable("NaniMarketDataProviderIndexOptionSecurities", "MDP");
+                });
+
+            modelBuilder.Entity("NaniTrader.BackTester.MarketDataProviders.Securities.IndexSecurity", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("ConcurrencyStamp")
+                        .IsConcurrencyToken()
+                        .IsRequired()
+                        .HasMaxLength(40)
+                        .HasColumnType("nvarchar(40)")
+                        .HasColumnName("ConcurrencyStamp");
+
+                    b.Property<DateTime>("CreationTime")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("CreationTime");
+
+                    b.Property<Guid?>("CreatorId")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("CreatorId");
+
+                    b.Property<Guid?>("DeleterId")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("DeleterId");
+
+                    b.Property<DateTime?>("DeletionTime")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("DeletionTime");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(2000)
+                        .HasColumnType("nvarchar(2000)");
+
+                    b.Property<Guid>("ExchangeSecurityId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("ExtraProperties")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("ExtraProperties");
+
+                    b.Property<bool>("IsDeleted")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false)
+                        .HasColumnName("IsDeleted");
+
+                    b.Property<DateTime?>("LastModificationTime")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("LastModificationTime");
+
+                    b.Property<Guid?>("LastModifierId")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("LastModifierId");
+
+                    b.Property<Guid>("MarketDataProviderId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("MarketDataProviderId");
+
+                    b.ToTable("NaniMarketDataProviderIndexSecurities", "MDP");
                 });
 
             modelBuilder.Entity("Volo.Abp.AuditLogging.AuditLog", b =>
@@ -2083,8 +2585,8 @@ namespace NaniTrader.BackTester.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("DefaultValue")
-                        .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
+                        .HasMaxLength(2048)
+                        .HasColumnType("nvarchar(2048)");
 
                     b.Property<string>("Description")
                         .HasMaxLength(512)
@@ -2114,8 +2616,8 @@ namespace NaniTrader.BackTester.Migrations
                         .HasColumnType("nvarchar(128)");
 
                     b.Property<string>("Providers")
-                        .HasMaxLength(128)
-                        .HasColumnType("nvarchar(128)");
+                        .HasMaxLength(1024)
+                        .HasColumnType("nvarchar(1024)");
 
                     b.HasKey("Id");
 
@@ -2206,70 +2708,200 @@ namespace NaniTrader.BackTester.Migrations
                     b.ToTable("AbpTenantConnectionStrings", (string)null);
                 });
 
-            modelBuilder.Entity("NaniTrader.BackTester.Exchanges.EquityFutureSecurity", b =>
+            modelBuilder.Entity("NaniTrader.BackTester.Exchanges.Securities.EquityFutureSecurity", b =>
                 {
                     b.HasOne("NaniTrader.BackTester.Exchanges.Exchange", "Exchange")
                         .WithMany("EquityFutureSecurities")
                         .HasForeignKey("ExchangeId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("NaniTrader.BackTester.Exchanges.Securities.EquitySecurity", "Underlying")
+                        .WithMany("Futures")
+                        .HasForeignKey("UnderlyingId")
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Exchange");
+
+                    b.Navigation("Underlying");
                 });
 
-            modelBuilder.Entity("NaniTrader.BackTester.Exchanges.EquityOptionSecurity", b =>
+            modelBuilder.Entity("NaniTrader.BackTester.Exchanges.Securities.EquityOptionSecurity", b =>
                 {
                     b.HasOne("NaniTrader.BackTester.Exchanges.Exchange", "Exchange")
                         .WithMany("EquityOptionSecurities")
                         .HasForeignKey("ExchangeId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("NaniTrader.BackTester.Exchanges.Securities.EquitySecurity", "Underlying")
+                        .WithMany("Options")
+                        .HasForeignKey("UnderlyingId")
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Exchange");
+
+                    b.Navigation("Underlying");
                 });
 
-            modelBuilder.Entity("NaniTrader.BackTester.Exchanges.EquitySecurity", b =>
+            modelBuilder.Entity("NaniTrader.BackTester.Exchanges.Securities.EquitySecurity", b =>
                 {
                     b.HasOne("NaniTrader.BackTester.Exchanges.Exchange", "Exchange")
                         .WithMany("EquitySecurities")
                         .HasForeignKey("ExchangeId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Exchange");
                 });
 
-            modelBuilder.Entity("NaniTrader.BackTester.Exchanges.IndexFutureSecurity", b =>
+            modelBuilder.Entity("NaniTrader.BackTester.Exchanges.Securities.IndexFutureSecurity", b =>
                 {
                     b.HasOne("NaniTrader.BackTester.Exchanges.Exchange", "Exchange")
                         .WithMany("IndexFutureSecurities")
                         .HasForeignKey("ExchangeId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("NaniTrader.BackTester.Exchanges.Securities.IndexSecurity", "Underlying")
+                        .WithMany("Futures")
+                        .HasForeignKey("UnderlyingId")
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Exchange");
+
+                    b.Navigation("Underlying");
                 });
 
-            modelBuilder.Entity("NaniTrader.BackTester.Exchanges.IndexOptionSecurity", b =>
+            modelBuilder.Entity("NaniTrader.BackTester.Exchanges.Securities.IndexOptionSecurity", b =>
                 {
                     b.HasOne("NaniTrader.BackTester.Exchanges.Exchange", "Exchange")
                         .WithMany("IndexOptionSecurities")
                         .HasForeignKey("ExchangeId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("NaniTrader.BackTester.Exchanges.Securities.IndexSecurity", "Underlying")
+                        .WithMany("Options")
+                        .HasForeignKey("UnderlyingId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("Exchange");
+
+                    b.Navigation("Underlying");
+                });
+
+            modelBuilder.Entity("NaniTrader.BackTester.Exchanges.Securities.IndexSecurity", b =>
+                {
+                    b.HasOne("NaniTrader.BackTester.Exchanges.Exchange", "Exchange")
+                        .WithMany("IndexSecurities")
+                        .HasForeignKey("ExchangeId")
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Exchange");
                 });
 
-            modelBuilder.Entity("NaniTrader.BackTester.Exchanges.IndexSecurity", b =>
+            modelBuilder.Entity("NaniTrader.BackTester.MarketDataProviders.Securities.EquityFutureSecurity", b =>
                 {
-                    b.HasOne("NaniTrader.BackTester.Exchanges.Exchange", "Exchange")
-                        .WithMany("IndexSecurities")
-                        .HasForeignKey("ExchangeId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                    b.HasOne("NaniTrader.BackTester.MarketDataProviders.MarketDataProvider", "MarketDataProvider")
+                        .WithMany("EquityFutureSecurities")
+                        .HasForeignKey("MarketDataProviderId")
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
-                    b.Navigation("Exchange");
+                    b.HasOne("NaniTrader.BackTester.MarketDataProviders.Securities.EquitySecurity", "Underlying")
+                        .WithMany("Futures")
+                        .HasForeignKey("UnderlyingId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("MarketDataProvider");
+
+                    b.Navigation("Underlying");
+                });
+
+            modelBuilder.Entity("NaniTrader.BackTester.MarketDataProviders.Securities.EquityOptionSecurity", b =>
+                {
+                    b.HasOne("NaniTrader.BackTester.MarketDataProviders.MarketDataProvider", "MarketDataProvider")
+                        .WithMany("EquityOptionSecurities")
+                        .HasForeignKey("MarketDataProviderId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("NaniTrader.BackTester.MarketDataProviders.Securities.EquitySecurity", "Underlying")
+                        .WithMany("Options")
+                        .HasForeignKey("UnderlyingId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("MarketDataProvider");
+
+                    b.Navigation("Underlying");
+                });
+
+            modelBuilder.Entity("NaniTrader.BackTester.MarketDataProviders.Securities.EquitySecurity", b =>
+                {
+                    b.HasOne("NaniTrader.BackTester.MarketDataProviders.MarketDataProvider", "MarketDataProvider")
+                        .WithMany("EquitySecurities")
+                        .HasForeignKey("MarketDataProviderId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("MarketDataProvider");
+                });
+
+            modelBuilder.Entity("NaniTrader.BackTester.MarketDataProviders.Securities.IndexFutureSecurity", b =>
+                {
+                    b.HasOne("NaniTrader.BackTester.MarketDataProviders.MarketDataProvider", "MarketDataProvider")
+                        .WithMany("IndexFutureSecurities")
+                        .HasForeignKey("MarketDataProviderId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("NaniTrader.BackTester.MarketDataProviders.Securities.IndexSecurity", "Underlying")
+                        .WithMany("Futures")
+                        .HasForeignKey("UnderlyingId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("MarketDataProvider");
+
+                    b.Navigation("Underlying");
+                });
+
+            modelBuilder.Entity("NaniTrader.BackTester.MarketDataProviders.Securities.IndexOptionSecurity", b =>
+                {
+                    b.HasOne("NaniTrader.BackTester.MarketDataProviders.MarketDataProvider", "MarketDataProvider")
+                        .WithMany("IndexOptionSecurities")
+                        .HasForeignKey("MarketDataProviderId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("NaniTrader.BackTester.MarketDataProviders.Securities.IndexSecurity", "Underlying")
+                        .WithMany("Options")
+                        .HasForeignKey("UnderlyingId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("MarketDataProvider");
+
+                    b.Navigation("Underlying");
+                });
+
+            modelBuilder.Entity("NaniTrader.BackTester.MarketDataProviders.Securities.IndexSecurity", b =>
+                {
+                    b.HasOne("NaniTrader.BackTester.MarketDataProviders.MarketDataProvider", "MarketDataProvider")
+                        .WithMany("IndexSecurities")
+                        .HasForeignKey("MarketDataProviderId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("MarketDataProvider");
                 });
 
             modelBuilder.Entity("Volo.Abp.AuditLogging.AuditLogAction", b =>
@@ -2427,6 +3059,49 @@ namespace NaniTrader.BackTester.Migrations
                     b.Navigation("IndexOptionSecurities");
 
                     b.Navigation("IndexSecurities");
+                });
+
+            modelBuilder.Entity("NaniTrader.BackTester.Exchanges.Securities.EquitySecurity", b =>
+                {
+                    b.Navigation("Futures");
+
+                    b.Navigation("Options");
+                });
+
+            modelBuilder.Entity("NaniTrader.BackTester.Exchanges.Securities.IndexSecurity", b =>
+                {
+                    b.Navigation("Futures");
+
+                    b.Navigation("Options");
+                });
+
+            modelBuilder.Entity("NaniTrader.BackTester.MarketDataProviders.MarketDataProvider", b =>
+                {
+                    b.Navigation("EquityFutureSecurities");
+
+                    b.Navigation("EquityOptionSecurities");
+
+                    b.Navigation("EquitySecurities");
+
+                    b.Navigation("IndexFutureSecurities");
+
+                    b.Navigation("IndexOptionSecurities");
+
+                    b.Navigation("IndexSecurities");
+                });
+
+            modelBuilder.Entity("NaniTrader.BackTester.MarketDataProviders.Securities.EquitySecurity", b =>
+                {
+                    b.Navigation("Futures");
+
+                    b.Navigation("Options");
+                });
+
+            modelBuilder.Entity("NaniTrader.BackTester.MarketDataProviders.Securities.IndexSecurity", b =>
+                {
+                    b.Navigation("Futures");
+
+                    b.Navigation("Options");
                 });
 
             modelBuilder.Entity("Volo.Abp.AuditLogging.AuditLog", b =>

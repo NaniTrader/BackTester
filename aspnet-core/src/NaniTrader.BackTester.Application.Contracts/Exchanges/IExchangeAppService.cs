@@ -9,12 +9,12 @@ namespace NaniTrader.BackTester.Exchanges
 {
     public interface IExchangeAppService : IApplicationService
     {
-        Task<ExchangeDto> GetAsync(int id);
+        Task<ExchangeDto> GetAsync(Guid id);
 
         Task<ExchangeDto> CreateAsync(CreateUpdateExchangeDto input);
 
         Task<PagedResultDto<ExchangeInListDto>> GetListAsync(ExchangeListFilterDto input);
 
-        Task DeleteAsync(int id);
+        Task DeleteAsync(Guid id);
     }
 }

@@ -12,10 +12,12 @@ namespace NaniTrader.BackTester.Exchanges
     public class ExchangeManager : DomainService
     {
         private readonly IExchangeRepository _exchangeRepository;
+        private readonly IGuidGenerator _guidGenerator;
 
-        public ExchangeManager(IExchangeRepository exchangeRepository)
+        public ExchangeManager(IExchangeRepository exchangeRepository, IGuidGenerator guidGenerator)
         {
             _exchangeRepository = exchangeRepository;
+            _guidGenerator = guidGenerator;
         }
 
         public async Task<Exchange> CreateAsync(string name, string description)
@@ -28,7 +30,7 @@ namespace NaniTrader.BackTester.Exchanges
                 throw new ExchangeAlreadyExistsException(name);
             }
 
-            return new Exchange(name, description);
+            return new Exchange(_guidGenerator.Create(), name, description);
         }
     }
 }

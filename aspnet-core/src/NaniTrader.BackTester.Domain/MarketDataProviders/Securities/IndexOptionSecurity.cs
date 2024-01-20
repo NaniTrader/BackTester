@@ -10,26 +10,26 @@ using Volo.Abp.Domain.Entities.Auditing;
 
 namespace NaniTrader.BackTester.MarketDataProviders.Securities
 {
-    public class IndexOptionSecurity : FullAuditedEntity<long>
+    public class IndexOptionSecurity : FullAuditedAggregateRoot<Guid>
     {
         // here for ef core
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor.
         private IndexOptionSecurity() { }
 #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor.
 
-        public MarketDataProvider? MarketDataProvider { get; private set; }
-        public int MarketDataProviderId { get; private set; }
-        public IndexSecurity? IndexSecurity { get; private set; }
-        public long IndexSecurityId { get; private set; }
+        public Guid ExchangeSecurityId { get; private set; }
+        public MarketDataProvider MarketDataProvider { get; private set; }
+        public IndexSecurity Underlying { get; private set; }
         public string Name { get; private set; }
         public string Description { get; private set; }
 
-        internal IndexOptionSecurity(string name, string description, int marketDataProviderId, long indexSecurityId)
+        internal IndexOptionSecurity(Guid id, string name, string description, MarketDataProvider marketDataProvider, IndexSecurity underlying, Guid exchangeSecurityId) : base(id)
         {
             SetName(name);
             SetDescription(description);
-            MarketDataProviderId = marketDataProviderId;
-            IndexSecurityId = indexSecurityId;
+            MarketDataProvider = marketDataProvider;
+            Underlying = underlying;
+            ExchangeSecurityId = exchangeSecurityId;
         }
 
         [MemberNotNull(nameof(Name))]
