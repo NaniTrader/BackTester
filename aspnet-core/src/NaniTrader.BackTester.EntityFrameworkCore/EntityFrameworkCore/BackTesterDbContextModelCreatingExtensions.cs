@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using NaniTrader.BackTester.Countries;
+using NaniTrader.BackTester.NSEData.CashMarket;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -141,6 +142,27 @@ namespace NaniTrader.BackTester.EntityFrameworkCore
             });
         }
 
+        public static void ConfigureBackTesterNSEDataProviders(this ModelBuilder builder, BackTesterDbContext backTesterDbContext)
+        {
+            builder.Entity<NSEData.CashMarket.BhavCopy>(b =>
+            {
+                b.ToTable(BackTesterConsts.DbTablePrefix + nameof(backTesterDbContext.CashMarketBhavCopies), BackTesterConsts.DbSchemaSuppl);
+                b.ConfigureByConvention(); //auto configure for the base class props
+                b.Property(x => x.Date).IsRequired();
+                b.Property(x => x.FileStatus).IsRequired().HasConversion<string>();
+                b.HasIndex(x => x.Date).IsUnique();
+            });
+
+            builder.Entity<NSEData.CashMarket.BhavCopyData>(b =>
+            {
+                b.ToTable(BackTesterConsts.DbTablePrefix + nameof(backTesterDbContext.CashMarketBhavCopiesData), BackTesterConsts.DbSchemaSuppl);
+                b.ConfigureByConvention(); //auto configure for the base class props
+                b.Property(x => x.Data).IsRequired();
+                b.Property(x => x.FileName).IsRequired();
+                b.Property(x => x.FileLastModified).IsRequired();
+            });
+        }
+
         public static void ConfigureBackTesterNavigations(this ModelBuilder builder)
         {
             builder.Entity<Exchanges.Securities.EquitySecurity>(b =>
@@ -209,6 +231,11 @@ namespace NaniTrader.BackTester.EntityFrameworkCore
             {
                 b.HasOne(e => e.MarketDataProvider).WithMany(e => e.IndexOptionSecurities).HasForeignKey("MarketDataProviderId").IsRequired().OnDelete(DeleteBehavior.NoAction);
                 b.HasOne(e => e.Underlying).WithMany(e => e.Options).HasForeignKey("UnderlyingId").IsRequired().OnDelete(DeleteBehavior.NoAction);
+            });
+
+            builder.Entity<NSEData.CashMarket.BhavCopy>(b =>
+            {
+                b.HasOne(e => e.BhavCopyData).WithOne().HasForeignKey<BhavCopyData>("BhavCopyId").OnDelete(DeleteBehavior.Cascade);
             });
         }
     }

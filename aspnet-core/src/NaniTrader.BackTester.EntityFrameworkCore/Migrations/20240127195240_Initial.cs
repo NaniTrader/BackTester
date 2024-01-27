@@ -12,6 +12,9 @@ namespace NaniTrader.BackTester.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.EnsureSchema(
+                name: "Suppl");
+
+            migrationBuilder.EnsureSchema(
                 name: "dbo");
 
             migrationBuilder.EnsureSchema(
@@ -400,6 +403,29 @@ namespace NaniTrader.BackTester.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "NaniCashMarketBhavCopies",
+                schema: "Suppl",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Date = table.Column<DateOnly>(type: "date", nullable: false),
+                    FileStatus = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ExtraProperties = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ConcurrencyStamp = table.Column<string>(type: "nvarchar(40)", maxLength: 40, nullable: false),
+                    CreationTime = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    CreatorId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    LastModificationTime = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    LastModifierId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false, defaultValue: false),
+                    DeleterId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    DeletionTime = table.Column<DateTime>(type: "datetime2", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_NaniCashMarketBhavCopies", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "NaniCountries",
                 schema: "dbo",
                 columns: table => new
@@ -750,6 +776,37 @@ namespace NaniTrader.BackTester.Migrations
                         name: "FK_AbpUserTokens_AbpUsers_UserId",
                         column: x => x.UserId,
                         principalTable: "AbpUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "NaniCashMarketBhavCopiesData",
+                schema: "Suppl",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Data = table.Column<byte[]>(type: "varbinary(max)", nullable: false),
+                    FileName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    FileLastModified = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    BhavCopyId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    CreationTime = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    CreatorId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    LastModificationTime = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    LastModifierId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false, defaultValue: false),
+                    DeleterId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    DeletionTime = table.Column<DateTime>(type: "datetime2", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_NaniCashMarketBhavCopiesData", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_NaniCashMarketBhavCopiesData_NaniCashMarketBhavCopies_BhavCopyId",
+                        column: x => x.BhavCopyId,
+                        principalSchema: "Suppl",
+                        principalTable: "NaniCashMarketBhavCopies",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -1461,6 +1518,21 @@ namespace NaniTrader.BackTester.Migrations
                 column: "UserName");
 
             migrationBuilder.CreateIndex(
+                name: "IX_NaniCashMarketBhavCopies_Date",
+                schema: "Suppl",
+                table: "NaniCashMarketBhavCopies",
+                column: "Date",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_NaniCashMarketBhavCopiesData_BhavCopyId",
+                schema: "Suppl",
+                table: "NaniCashMarketBhavCopiesData",
+                column: "BhavCopyId",
+                unique: true,
+                filter: "[BhavCopyId] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_NaniExchangeEquityFutureSecurities_ExchangeId",
                 schema: "Exch",
                 table: "NaniExchangeEquityFutureSecurities",
@@ -1684,6 +1756,10 @@ namespace NaniTrader.BackTester.Migrations
                 name: "AbpUserTokens");
 
             migrationBuilder.DropTable(
+                name: "NaniCashMarketBhavCopiesData",
+                schema: "Suppl");
+
+            migrationBuilder.DropTable(
                 name: "NaniCountries",
                 schema: "dbo");
 
@@ -1739,6 +1815,10 @@ namespace NaniTrader.BackTester.Migrations
 
             migrationBuilder.DropTable(
                 name: "AbpUsers");
+
+            migrationBuilder.DropTable(
+                name: "NaniCashMarketBhavCopies",
+                schema: "Suppl");
 
             migrationBuilder.DropTable(
                 name: "NaniExchangeEquitySecurities",

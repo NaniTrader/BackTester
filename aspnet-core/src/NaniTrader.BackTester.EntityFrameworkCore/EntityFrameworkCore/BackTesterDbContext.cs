@@ -31,6 +31,8 @@ public class BackTesterDbContext :
     /* Add DbSet properties for your Aggregate Roots / Entities here. */
 
     public DbSet<Exchanges.Exchange> Exchanges { get; set; }
+    public DbSet<NSEData.CashMarket.BhavCopy> CashMarketBhavCopies { get; set; }
+    public DbSet<NSEData.CashMarket.BhavCopyData> CashMarketBhavCopiesData { get; set; }
     public DbSet<Exchanges.Securities.EquitySecurity> ExchangeEquitySecurities { get; set; }
     public DbSet<Exchanges.Securities.EquityFutureSecurity> ExchangeEquityFutureSecurities { get; set; }
     public DbSet<Exchanges.Securities.EquityOptionSecurity> ExchangeEquityOptionSecurities { get; set; }
@@ -98,6 +100,7 @@ public class BackTesterDbContext :
         builder.ConfigureBackTester(this);
         builder.ConfigureBackTesterExchanges(this);
         builder.ConfigureBackTesterMarketDataProviders(this);
+        builder.ConfigureBackTesterNSEDataProviders(this);
         builder.ConfigureBackTesterNavigations();
     }
 }

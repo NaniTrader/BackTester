@@ -46,7 +46,7 @@ namespace NaniTrader.BackTester.Data
                 return;
             }
 
-            var marketDataProvider = new MarketDataProvider(_guidGenerator.Create(), "ExchangeWebsiteScraper", "Data Scraped from Exchanges Website");
+            var marketDataProvider = new MarketDataProvider(_guidGenerator.Create(), "ExchangeWebsiteScrapedData", "Data Scraped from Exchanges Website");
             var exchanges = await _exchangeRepository.GetPagedListAsync(0, 10, "");
 
             foreach (var exchange in exchanges)

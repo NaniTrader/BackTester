@@ -13,7 +13,7 @@ using Volo.Abp.EntityFrameworkCore;
 namespace NaniTrader.BackTester.Migrations
 {
     [DbContext(typeof(BackTesterDbContext))]
-    [Migration("20240120193814_Initial")]
+    [Migration("20240127195240_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -968,6 +968,129 @@ namespace NaniTrader.BackTester.Migrations
                     b.HasIndex("MarketDataProviderId");
 
                     b.ToTable("NaniMarketDataProviderIndexSecurities", "MDP");
+                });
+
+            modelBuilder.Entity("NaniTrader.BackTester.NSEData.CashMarket.BhavCopy", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("ConcurrencyStamp")
+                        .IsConcurrencyToken()
+                        .IsRequired()
+                        .HasMaxLength(40)
+                        .HasColumnType("nvarchar(40)")
+                        .HasColumnName("ConcurrencyStamp");
+
+                    b.Property<DateTime>("CreationTime")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("CreationTime");
+
+                    b.Property<Guid?>("CreatorId")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("CreatorId");
+
+                    b.Property<DateOnly>("Date")
+                        .HasColumnType("date");
+
+                    b.Property<Guid?>("DeleterId")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("DeleterId");
+
+                    b.Property<DateTime?>("DeletionTime")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("DeletionTime");
+
+                    b.Property<string>("ExtraProperties")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("ExtraProperties");
+
+                    b.Property<string>("FileStatus")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsDeleted")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false)
+                        .HasColumnName("IsDeleted");
+
+                    b.Property<DateTime?>("LastModificationTime")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("LastModificationTime");
+
+                    b.Property<Guid?>("LastModifierId")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("LastModifierId");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Date")
+                        .IsUnique();
+
+                    b.ToTable("NaniCashMarketBhavCopies", "Suppl");
+                });
+
+            modelBuilder.Entity("NaniTrader.BackTester.NSEData.CashMarket.BhavCopyData", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<Guid?>("BhavCopyId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreationTime")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("CreationTime");
+
+                    b.Property<Guid?>("CreatorId")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("CreatorId");
+
+                    b.Property<byte[]>("Data")
+                        .IsRequired()
+                        .HasColumnType("varbinary(max)");
+
+                    b.Property<Guid?>("DeleterId")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("DeleterId");
+
+                    b.Property<DateTime?>("DeletionTime")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("DeletionTime");
+
+                    b.Property<DateTime>("FileLastModified")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("FileName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsDeleted")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false)
+                        .HasColumnName("IsDeleted");
+
+                    b.Property<DateTime?>("LastModificationTime")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("LastModificationTime");
+
+                    b.Property<Guid?>("LastModifierId")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("LastModifierId");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BhavCopyId")
+                        .IsUnique()
+                        .HasFilter("[BhavCopyId] IS NOT NULL");
+
+                    b.ToTable("NaniCashMarketBhavCopiesData", "Suppl");
                 });
 
             modelBuilder.Entity("Volo.Abp.AuditLogging.AuditLog", b =>
@@ -2904,6 +3027,14 @@ namespace NaniTrader.BackTester.Migrations
                     b.Navigation("MarketDataProvider");
                 });
 
+            modelBuilder.Entity("NaniTrader.BackTester.NSEData.CashMarket.BhavCopyData", b =>
+                {
+                    b.HasOne("NaniTrader.BackTester.NSEData.CashMarket.BhavCopy", null)
+                        .WithOne("BhavCopyData")
+                        .HasForeignKey("NaniTrader.BackTester.NSEData.CashMarket.BhavCopyData", "BhavCopyId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
             modelBuilder.Entity("Volo.Abp.AuditLogging.AuditLogAction", b =>
                 {
                     b.HasOne("Volo.Abp.AuditLogging.AuditLog", null)
@@ -3102,6 +3233,11 @@ namespace NaniTrader.BackTester.Migrations
                     b.Navigation("Futures");
 
                     b.Navigation("Options");
+                });
+
+            modelBuilder.Entity("NaniTrader.BackTester.NSEData.CashMarket.BhavCopy", b =>
+                {
+                    b.Navigation("BhavCopyData");
                 });
 
             modelBuilder.Entity("Volo.Abp.AuditLogging.AuditLog", b =>

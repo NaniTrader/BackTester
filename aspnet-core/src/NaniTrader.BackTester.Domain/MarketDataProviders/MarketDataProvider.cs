@@ -63,7 +63,7 @@ namespace NaniTrader.BackTester.MarketDataProviders
         {
             if (SubscribedExchanges.Contains(exchangeId))
             {
-                throw new BusinessException(BackTesterDomainErrorCodes.ExchangeAlreadyExists)
+                throw new BusinessException(BackTesterDomainErrorCodes.MarketDataProviderAlreadyExists)
                     .WithData("ExchangeId", exchangeId);
             }
 

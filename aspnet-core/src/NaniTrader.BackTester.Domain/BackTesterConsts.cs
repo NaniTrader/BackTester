@@ -9,4 +9,6 @@ public static class BackTesterConsts
     public const string DbSchemaExch = "Exch";
 
     public const string DbSchemaMDP = "MDP";
+
+    public const string DbSchemaSuppl = "Suppl";
 }
