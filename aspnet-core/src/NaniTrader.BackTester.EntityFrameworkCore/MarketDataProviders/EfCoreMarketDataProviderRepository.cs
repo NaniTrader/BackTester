@@ -25,20 +25,5 @@ namespace NaniTrader.BackTester.MarketDataProviders
             var dbSet = await GetDbSetAsync();
             return await dbSet.FirstOrDefaultAsync(marketDataProvider => marketDataProvider.Name == name);
         }
-
-        public async Task<List<MarketDataProvider>> GetListAsync(
-            int skipCount,
-            int maxResultCount,
-            string sorting,
-            string? filter)
-        {
-            var dbSet = await GetDbSetAsync();
-            return await dbSet
-                .WhereIf(!filter.IsNullOrWhiteSpace(), marketDataProvider => marketDataProvider.Name.Contains(filter!))
-                .OrderBy(sorting)
-                .Skip(skipCount)
-                .Take(maxResultCount)
-                .ToListAsync();
-        }
     }
 }

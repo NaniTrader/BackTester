@@ -26,7 +26,7 @@ namespace NaniTrader.BackTester.Exchanges
             return await dbSet.FirstOrDefaultAsync(exchange => exchange.Name == name);
         }
 
-        public async Task<List<Exchange>> GetListAsync(
+        public async Task<List<Exchange>> GetPagedListWithNameFilterAsync(
             int skipCount,
             int maxResultCount,
             string sorting,

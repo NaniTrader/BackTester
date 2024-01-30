@@ -13,7 +13,7 @@ namespace NaniTrader.BackTester.Exchanges
 
         Task<ExchangeDto> CreateAsync(CreateUpdateExchangeDto input);
 
-        Task<PagedResultDto<ExchangeInListDto>> GetListAsync(ExchangeListFilterDto input);
+        Task<PagedResultDto<ExchangeInListDto>> GetPagedListWithNameFilterAsync(ExchangeListFilterDto input);
 
         Task DeleteAsync(Guid id);
     }

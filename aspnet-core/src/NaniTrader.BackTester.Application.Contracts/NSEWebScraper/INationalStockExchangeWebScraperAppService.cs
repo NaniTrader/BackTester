@@ -6,6 +6,7 @@ namespace NaniTrader.BackTester.NSEWebScraper
 {
     public interface INationalStockExchangeWebScraperAppService : IApplicationService
     {
+        Task GetCashMarketBhavCopyAsync(DateTime date);
         Task GetCashMarketFullBhavCopyAsync(DateTime date);
     }
 }

@@ -11,8 +11,7 @@ namespace NaniTrader.BackTester.Exchanges
     {
         Task<Exchange?> FindByNameAsync(string name);
 
-        //TODO Remove
-        Task<List<Exchange>> GetListAsync(
+        Task<List<Exchange>> GetPagedListWithNameFilterAsync(
             int skipCount,
             int maxResultCount,
             string sorting,

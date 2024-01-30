@@ -18,6 +18,9 @@ using Polly.Retry;
 using Polly.Timeout;
 using Polly;
 using System.Net.Http.Headers;
+using CsvHelper;
+using static Volo.Abp.Identity.Settings.IdentitySettingNames;
+using System.Runtime.Intrinsics.X86;
 
 namespace NaniTrader.BackTester;
 
@@ -40,13 +43,13 @@ public class BackTesterApplicationModule : AbpModule
             options.AddMaps<BackTesterApplicationModule>();
         });
 
+        AsyncTimeoutPolicy<HttpResponseMessage> timeoutPolicy = Policy
+            .TimeoutAsync<HttpResponseMessage>(TimeSpan.FromMilliseconds(30000));
+
         AsyncRetryPolicy<HttpResponseMessage> retryPolicy = HttpPolicyExtensions
             .HandleTransientHttpError()
             .Or<TimeoutRejectedException>() // Thrown by Polly's TimeoutPolicy if the inner call gets timeout.
             .WaitAndRetryAsync(2, dp => TimeSpan.FromMilliseconds(500));
-
-        AsyncTimeoutPolicy<HttpResponseMessage> timeoutPolicy = Policy
-            .TimeoutAsync<HttpResponseMessage>(TimeSpan.FromMilliseconds(500));
 
         context.Services.AddRefitClient<INSEWebScraper>()
             .ConfigureHttpClient((sp, httpClient) =>
@@ -63,6 +66,7 @@ public class BackTesterApplicationModule : AbpModule
             {
                 HttpClientHandler handler = new HttpClientHandler();
                 CookieContainer cookies = new CookieContainer();
+                handler.ServerCertificateCustomValidationCallback += (o, c, ch, er) => true;
                 handler.CookieContainer = cookies;
                 return handler;
             })

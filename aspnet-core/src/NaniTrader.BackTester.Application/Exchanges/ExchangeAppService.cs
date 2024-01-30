@@ -27,14 +27,14 @@ namespace NaniTrader.BackTester.Exchanges
             return ObjectMapper.Map<Exchange, ExchangeDto>(exchange);
         }
 
-        public async Task<PagedResultDto<ExchangeInListDto>> GetListAsync(ExchangeListFilterDto input)
+        public async Task<PagedResultDto<ExchangeInListDto>> GetPagedListWithNameFilterAsync(ExchangeListFilterDto input)
         {
             if (input.Sorting.IsNullOrWhiteSpace())
             {
                 input.Sorting = nameof(Exchange.Name);
             }
 
-            var exchanges = await _exchangeRepository.GetListAsync(
+            var exchanges = await _exchangeRepository.GetPagedListWithNameFilterAsync(
                 input.SkipCount,
                 input.MaxResultCount,
                 input.Sorting,

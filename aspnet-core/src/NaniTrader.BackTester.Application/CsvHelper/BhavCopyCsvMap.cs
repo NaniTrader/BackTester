@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace NaniTrader.BackTester.CsvHelper
 {
-    internal class EquitySecuritiesCsvMap
+    internal class BhavCopyCsvMap
     {
     }
 }
